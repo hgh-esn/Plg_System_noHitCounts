@@ -67,6 +67,7 @@
  </div>
 ]]>
 	</description>
+		<scriptfile>install/script.php</scriptfile>
 	<install>
 		<sql/>
 	</install>
@@ -82,7 +83,6 @@
 	<scriptfile>install/script.php</scriptfile>
 	<files folder="site">
 		<folder>assets</folder>
-		<folder>install</folder>
 		<folder>language</folder>
 		<folder>models</folder>
 		<filename>index.html</filename>
