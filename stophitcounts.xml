@@ -80,7 +80,7 @@
 		<server name="HGHs UpdateServer - stopHitCounts" type="extension" priority="2">https://moba-hgh.de/updateserver/extensions/updates/plg_stophitcounts.xml</server>
 	</updateservers>
 	<scriptfile>install/script.php</scriptfile>
-	<files">
+	<files>
 		<folder>assets</folder>
 		<folder>install</folder>
 		<folder>language</folder>
