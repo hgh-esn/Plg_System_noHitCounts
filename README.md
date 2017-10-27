@@ -1,1 +1,1 @@
-# Stop the Joomla article-hitcounter for users, groups and bots
+# Stops the Joomla article-hitcounter for users, groups and bots
