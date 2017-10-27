@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * @package    stopHitCounts
  * @subpackage Base
  * @author     Hans-Guenter Heiserholt [HGH] {@link moba-hgh/joomla}
@@ -10,7 +10,7 @@
 //-- No direct access
 defined('_JEXEC') || die('=;)');
 
-/**
+/*
  * System Plugin.
  *
  * @package    stopHitCounts
@@ -37,203 +37,239 @@ class plgSystemstopHitCounts extends JPlugin
          $plugin       = JPluginHelper::getPlugin('system', 'stophitcounts');
          $this->params = new JRegistry($plugin->params);
       }
-      
-      if ($this->params->get('log_path'))
-      {
-         $logpath = $this->params->get('log_path');            
-      }
 
     } // end-function-construct
 
     /**
+     *  onContentPrepare
+     */
+   public function onContentPrepare($context, &$article, &$params, $limitstart)
+   { 
+//       $this->logHitCounter($this->params->get('log_active'),$article->id,1); 
+         return;  
+   }
+    /**
      *  onContentBeforeDisplay
      */
-
    public function onContentBeforeDisplay($context, &$article, &$params, $limitstart)
-   {  
-      $botfound = false;
+   { 
+//      echo '<br />' .'Ihre IP-Adresse ist:<b> ' .$_SERVER['REMOTE_ADDR'] .'</b>';    
+//      echo '<br />' .'Ihre URL ist:<b> '        .$_SERVER['REQUEST_URI'] .'</b>';
+//      echo '<br />' .'context='                 .$context; 
+
+       $this->logHitCounter($this->params->get('log_active'),$article->id,2);
+
       /**********************************************
        * First of all, we check if it is a bot-access
        * Then the counter is decremented because there 
-       * is no counting
+       * was already a hit
        **********************************************/      
       if ($this->params->get('disable_bots'))
       {
          $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'unknown';
          
          // returns true or false
-         $botfound = $this->checkBot($user_agent);
-         if ($botfound)
+         
+         if ($this->checkBot($user_agent))
          { 
-            $this->decrcnt();
-            
+            $this->decrHitCounter($this->params->get('log_active'),$article->id,$article->hits);
+/*            
             if ($this->params->get('log_active'))
             {
-               JLog::add('Bot - decr. hitCounter and return');
+               JLog::add('Bot - decr. hitCounter.');
             }
+*/           
+            $this-> logHitCounter($this->params->get('log_active'),$article->id,'bot');
             return;
-         }
-                
+         }               
       }
-      
+
       /***********************************
        * get act. UserData
        ***********************************/
       $user = JFactory::getUser();
-      $groups = $user->groups;
-      $userid = $user->id;
+      $groups     = $user->groups;
+      $authgroups = $user->getAuthorisedGroups();
+      $userid     = $user->id;
+      
+//    echo '<br />' .'userid=' .$user->id;
+//    echo '<br />' .'name='   .$user->name;
+//    echo '<br />';
 
-//      echo '<br />' .'userid=' .$user->id;
-//      echo '<br />' .'name='   .$user->name;
-//      echo '<br />';
+      /********************************************************
+       * ignore counting in featured area
+       ********************************************************/
+//      echo '<br />' .'context='.$context;
 
-         if ($article->featured)
-         {
-//         echo '<br />' .'loginuser=' .$user->id .'article featured';
-         $this->decrcnt();
-         return;
-         }
-      /***************************************
-       * check parm-user(s) to ignore counting
-       ***************************************/
-          
-      if ($this->params->get('disable_users') && $user->id > 0 )
+      if ($context == 'com_content.featured' || $context == 'com_content.category')
       {
-//       echo '<br />' .'get-disable_users=' .print_r($this->params->get('disable_users'));
-         if (in_array($user->id, $this->params->get('disable_users')) )
-         {
-//          echo '<br />' .'loggedIn-user=' .$user->id .' is blocked from counting.';
-            if ($this->params->get('log_active'))
-            {
-               JLog::add('loggedIn-user=' .$user->id .' is blocked from counting.');
-            } 
-         }
-      }     
-
-      /***********************************
-       * Check Groups
-       ***********************************/
-      if ($this->params->get('disable_groups'))
-      {
-//         echo '<br />' .'parm-groups=' .$this->params->get('disable_groups');
-//         echo '<br />' .'group(s)='    .print_r($groups);
-         
-         if (in_array($user->getAuthorisedGroups(), $this->params->get('disable_groups')) )
-         {
-//          echo '<br />' .'loggedIn-user=' .$user->id .' in the to block group for counting.';
-
-            if ($this->params->get('log_active'))
-            {
-               JLog::add('loggedIn-user=' .$user->id .' in the to block group for counting.');
-            } 
-         }
+//      echo '<br />' .'loginuser= ' .$user->id .' no counting in featuered/category area(s)';
+              
+        if ($this->params->get('log_active'))
+        {
+           JLog::add('loginuser= ' .$user->id .' no counting in featuered/category area(s).');
+        }
+        
+        $this->decrHitCounter($this->params->get('log_active'),$article->id,$article->hits);
+        return;
       }
-         
+     
       /**************************************************
        * Check if public-user matches
        **************************************************/       
-      if ($user->id == 0 && $botfound === false)
+      if ($context  == 'com_content.article' && $user->id == 0 )
       {
-//        echo '<br />' .'user-parm='.$this->params->get('disable_users');
-//        echo '<br />' .'actual user is Public - Article-HitCounter stays counting';
+//       echo '<br />' .'user-parm='.$this->params->get('disable_users');
+//       echo '<br />' .'actual user is Public - Article-HitCounter stays counting';
 
          if ($this->params->get('log_active'))
          {
-            JLog::add('actual user is PUBLIC - hitcounter not blocked');
+            JLog::add('actual user is PUBLIC - HitCounter stays counting');
          }
          return;
       }
-      
-      /**************************************************
-       * Check if user is not a Super-Admin and not a bot
-       **************************************************/ 
-/*
-      if (!in_array(8, $groups) && ($botfound === false) && ($this->params->get('disable_users') != $user->id))
+
+      /*******************************************************
+       * Check if loggedIn user matches a self-created article
+       *******************************************************/    
+      if ($this->params->get('disable_selfcreated_only'))
       {
-         // only enter if the user is in the group 8 (group 8 = Super-Administrator)
-          echo '<br />' .'actual user is NO Super-Admin' 
-              .'<br />' .'Article-HitCounter stays counting';
- 
-         if ($this->params->get('log_active'))
+         if ( ($context  == 'com_content.article' && $user->id = $article->created_by)
+            )
          {
-            JLog::add('actual user is NO Super-Admin');
+//          echo '<br />' .'loggedIn-user=' .$user->id .'  matched >created_by<.';
+              
+            if ($this->params->get('log_active'))
+            {
+                  JLog::add('loggedIn-user= ' .$user->id .' matched >created_by<.');
+            } 
+            $this->decrHitCounter($this->params->get('log_active'),$article->id,$article->hits);
+            return;      
          }
-         return;
+      } 
+       
+      /***************************************
+       * check user(s) to ignore for counting
+       ***************************************/
+          
+      if ($this->params->get('disable_users'))
+      {
+         if (in_array($user->id, $this->params->get('disable_users')) )
+         {
+//          echo '<br />' .'loggedIn-user= ' .$user->id .' is blocked from counting.';
+
+            if ($this->params->get('log_active'))
+            {
+               JLog::add('loggedIn-user= ' .$user->id .' is blocked from counting.');
+            } 
+            $this->decrHitCounter($this->params->get('log_active'),$article->id,$article->hits);
+            return;
+         }
+      }     
+
+      /***************************************
+       * Check group(s) to ignore for counting
+       ***************************************/
+      if ($this->params->get('disable_groups') )
+      {
+ //         echo '<br />' .'parm-groups='           .print_r($this->params->get('disable_groups')) .'<br />';
+ //         echo '<br />' .'group(s)='              .print_r($groups) .'<br />';
+ //         echo '<br />' .'autherisedgroup(s)='    .print_r($user->getAuthorisedGroups()) .'<br />';
+
+         foreach ( $this->params->get('disable_groups') as $key => $value ) 
+         {         
+//          echo '<br />' .'key/value=' .$key .'/' .$value;         
+            if ( in_array( $value , $authgroups ))  
+            {
+ //            echo '<br />' .'loggedIn-user= ' .$user->id .' in noncounting - group.';  
+               if ($this->params->get('log_active'))
+               {
+                  JLog::add('loggedIn-user= ' .$user->id .' in noncounting - group.');
+               }
+               
+               $this->decrHitCounter($this->params->get('log_active'),$article->id,$article->hits);
+   
+               return; 
+            }
+         }
+//       echo'<br />' .'super-user not found';
+      }
+   }// end-function onContentBeforeDisplay
+
+   /**
+    * Method to decrement the Hitcounter
+    * @access private
+    * @param  -
+    * @use    article->hits, article->id, 
+    * @return true - when hit-counter before decrementation is > 0, false - when hit-counter = 0
+    * @since 1.0.0
+    */
+    
+   public function decrHitCounter($log_active,$id,$hits)
+   {
+//      echo '<br />'.'fct::decrHitCounter-parm:log_active='.$log_active;
+//      echo '<br />'.'fct::decrHitCounter:article-hits='   .$hits;
+//      echo '<br />'.'fct::decrHitCounter:article-id='     .$id;
+      if ($hits > 0)
+      {       
+         /****************************************************************************************
+          * we decrement the article-hitconter because it is already incremented by joomla before
+          ****************************************************************************************/
+         $db = JFactory::getDbo();
+         $db->setQuery('UPDATE #__content SET hits = hits - 1 WHERE id = ' .$id);
+         $db->execute();
+         
+         if ($log_active)
+         {
+            JLog::add('- decr. hitCounter[id/hits] = ' .$id .'/' .$hits);
+         }
+         return 'true';
       }
       else
       {
-*/
-/*
-         echo '<br />' .'Ihre IP-Adresse ist:<b> ' .$_SERVER['REMOTE_ADDR'] .'</b>';
-               
-         echo '<br />' .'created_by='.$article->created_by;;
-         echo '<br />' .'user='      .$user; 
-         echo '<br />' .'userid='    .$user->id .'<br />';
-         echo '<br />' .'groups='    .print_r($groups);       
-*/
-//      }
- 
-      /***********************************
-       * increment hitcounter
-       ***********************************/
-      
-     if ( ($context  == 'com_content.article' && $user->id == $article->created_by) 
-          || ($botfound === true) 
-          || in_array($user->id, $this->params->get('disable_users'))
-          || in_array($user->getAuthorisedGroups(), $this->params->get('disable_groups'))
-        )
-     {
-         if ($this->params->get('log_active'))
+         if ($log_active)
          {
-            JLog::add('decr. article-hitCounter =' .$article->id .'/' .$article->hits);
+            JLog::add('no decm. hitCounter, because of ZERO hits in article/hits] =' .$id .'/'.$hits);
          }
-         
-         
-                
-//        echo '<br />' .'no HitCounting - [user-id <-> created by] matched or a bot';
-
-/*
-         if ($article->hits > 0)
-         {       
-            /****************************************************************************************
-             * we decrement the article-hitconter because it is already incremented by joomla before
-             ****************************************************************************************
-            $db = JFactory::getDbo();
-            $db->setQuery('UPDATE #__content SET hits = hits - 1 WHERE id = ' .$article->id);
-            $db->execute();
-         }
-*/
-           $this->decrcnt();
+         return 'false';
       }
-      else 
-      {
-//          echo '<br />' .'HitCounting';
-      }
-       
-      return '';
-
-   }// end-function onContentBeforeDisplay
-
-private function decrcnt()
-{
-         if ($article->hits > 0)
-         {       
-            /****************************************************************************************
-             * we decrement the article-hitconter because it is already incremented by joomla before
-             ****************************************************************************************/
-            $db = JFactory::getDbo();
-            $db->setQuery('UPDATE #__content SET hits = hits - 1 WHERE id = ' .$article->id);
-            $db->execute();
-         }
-}
+   }
    
-   /**
+   public function logHitCounter($log_active,$id,$nr)
+   {
+   
+      $db =& JFactory::getDBO();
+//      $query = $db->getQuery(true);
+//      $query->select('hits');
+//      $query->from('#__content'); 
+//      $query->where('id = ' .$id);   //put your condition here 
+      $query = "SELECT hits FROM #__content WHERE id=" .$id;    
+      $db->setQuery($query);
+      //echo $db->getQuery();exit;//SQL query string  
+      //check if error
+/*      if ($db->getErrorNum()) {
+        echo $db->getErrorMsg();
+        return;
+      }
+*/      
+       $hits =  $db->loadResult();
+               
+       if ($log_active)
+       {
+          JLog::add('- db-logHitCounter[id/hits] = ' .$id .'/' .$hits .'[ ' .$nr .']');
+       } 
+          
+      return $hits;
+   }
+     
+   /*
     * Method to check if the user agent is a bot
     * @access private
     * @param $user_agent string The user agent data
     * @return bool True if match (is bot), false if doesn't match (not a bot)
     * @since 1.0.0
     */
+
    private function checkBot($user_agent)
    {
       /****************************************************
@@ -292,6 +328,9 @@ private function decrcnt()
 //   echo '<br />' .'Bot/User-Agent=' .$user_agent; 
 
 // http://phpforum.de/forum/showpost.php?p=1445078&postcount=9
+     /**************************************************
+      * check for a matching bot
+      ***************************************************/
 
     for($i=0; $i <= count($bots); $i++)
     {
@@ -308,7 +347,7 @@ private function decrcnt()
     } 
     return false; 
 /*
-// This regex-Version makes no matches.
+// This regex-Version makes no matches! - don't know why?
 // make sure we escape any / characters for our regular expression
       $bots = str_replace('/','\/', $bots);
 
@@ -338,7 +377,7 @@ private function decrcnt()
 
 }// end-class
 
-/**
+/* 
  * Helper for logging
  * @package    Notes
  * @subpackage com_notes
@@ -347,23 +386,14 @@ private function decrcnt()
 
 jimport('joomla.log.log');
 
-// Add the logger.
+    // Add the logger.
+    // Set the name of the log file
+    // (optional) you can change the directory 
 
-JLog::addLogger(
-     // Pass an array of configuration options
-     
-    array(
-            // Set the name of the log file
-            'text_file' => 'plg_stophitcount-log.php',
-            // (optional) you can change the directory
-              'text_file_path' => 'administrator/logs'
- //               'text_file_path' => $logpath
-       ),     
-         JLog::INFO 
-        // The log category/categories which should be recorded in this file
-        // In this case, it's just the one category from our extension, still
-        // we need to put it inside an array
-        
-//        array('plg_stophitcounts')
-);
+    $options = array('text_file'      => 'plg_stophitcounts-log',            
+                     'text_file_path' => 'administrator/logs');
+
+// Pass the array of configuration options    
+
+JLog::addLogger($options, JLog::INFO);
 
