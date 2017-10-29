@@ -51,6 +51,19 @@ class plgSystemstopHitCounts extends JPlugin
 
 //       $this->logHitCounter($this->params->get('log_active'),$article->id,-);
 
+      /***********************************
+       * get act. UserData
+       ***********************************/
+      $user = JFactory::getUser();
+      $groups     = $user->groups;
+      $authgroups = $user->getAuthorisedGroups();
+      $userid     = $user->id;
+      
+//    echo '<br />' .'userid=' .$user->id;
+//    echo '<br />' .'name='   .$user->name;
+//    echo '<br />';
+//    echo '<br />' .'context='.$context;
+
       /********************************************************
        * ignore counting in featured area
        ********************************************************/      
@@ -96,19 +109,6 @@ class plgSystemstopHitCounts extends JPlugin
             return;
          }               
       }
-
-      /***********************************
-       * get act. UserData
-       ***********************************/
-      $user = JFactory::getUser();
-      $groups     = $user->groups;
-      $authgroups = $user->getAuthorisedGroups();
-      $userid     = $user->id;
-      
-//    echo '<br />' .'userid=' .$user->id;
-//    echo '<br />' .'name='   .$user->name;
-//    echo '<br />';
-//    echo '<br />' .'context='.$context;
 
       /**************************************************
        * Check if public-user matches
