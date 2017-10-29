@@ -96,6 +96,10 @@
   <config>
     <fields name="params">
 		<fieldset name="basic">
+	      		<field name="" type="spacer" default="" label="PLG_SYSTEM_SHC_BAS_TIPCONF_TXT" description="PLG_SYSTEM_SHC_BAS_TIPCONF_DESC"/>
+	  		<field name="" type="spacer" default="" label="PLG_SYSTEM_SHC_BAS_ADDCONF_TXT" description="PLG_SYSTEM_SHC_BAS_ADDCONF_DESC"/>
+	 		<field name="" type="spacer" default="" label="PLG_SYSTEM_SHC_BAS_DOK_TXT" description=""/>
+	  		<field name="" type="spacer" default="" label="PLG_SYSTEM_SHC_CR" description=""/>
 		</fieldset>
 		<fieldset name="SHC_std_options" addfieldpath="/plugins/system/plg_stophitcounts/images/models/fields">
 			<field name="disable_selfcreated_only" type="checkbox" label="PLG_SYSTEM_SHC_DISABLE_HIT_COUNT_SELF_ONLY_LABEL_TXT" description="PLG_SYSTEM_SHC_DISABLE_HIT_COUNT_SELF_ONLY_LABEL_DESC"/>
