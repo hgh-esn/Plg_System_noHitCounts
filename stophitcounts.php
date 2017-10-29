@@ -89,7 +89,7 @@ class plgSystemstopHitCounts extends JPlugin
              
             if ( $this->params->get('log_active') )
             {
-               JLog::add($msg);
+//             JLog::add($msg);  // meaasage already in checkbot !
             }
             
 //          $this-> logHitCounter($this->params->get('log_active'),$article->id,'bot',-);
@@ -416,7 +416,7 @@ jimport('joomla.log.log');
     // (optional) you can change the directory 
 
     $options = array('text_file'      => 'plg_stophitcounts-log',            
-                     'text_file_path' => '../administrator/logs');
+                     'text_file_path' => 'administrator/logs');
 
 // Pass the array of configuration options    
 
