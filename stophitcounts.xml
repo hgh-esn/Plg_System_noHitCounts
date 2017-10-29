@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" version="3.0" method="upgrade" group="system">
-	<name>System - stopHitCounts</name>
-	<creationDate>28-Oct-2017</creationDate>
-	<author>Hans-Guenter Heiserholt [HGH]</author>
-	<authorEmail>hgh-esn@t-online.de</authorEmail>
-	<authorUrl>moba-hgh/joomla</authorUrl>
-	<copyright>JED-HGH | Joomla Extension Development by HGH</copyright>
-	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-	<version>1.0.0</version>
-	<description>Unterdrückt das Weiterzählen des Artikel-Zugriffzählers für Bots, bestimmte Benutzer und/oder Rechtegruppen.
+  <name>System - stopHitCounts</name>
+  <creationDate>29-Oct-2017</creationDate>
+  <author>Hans-Guenter Heiserholt [HGH]</author>
+  <authorEmail>hgh-esn@t-online.de</authorEmail>
+  <authorUrl>moba-hgh/joomla</authorUrl>
+  <copyright>JED-HGH | Joomla Extension Development by HGH</copyright>
+  <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+  <version>1.0.0</version>
+  <description>Unterdrückt das Weiterzählen des Artikel-Zugriffzählers für Bots, bestimmte Benutzer und/oder Rechtegruppen.
 <![CDATA[
    <hr />
    <div align="center">
@@ -66,32 +66,33 @@
     </table>
  </div>
 ]]>
-	</description>
-	<install>
-		<sql/>
-	</install>
-	<uninstall>
-		<sql/>
-	</uninstall>
-	<update>
-		<schemas/>
-	</update>
-	<updateservers>
-		<server name="HGHs UpdateServer - stopHitCounts" type="extension" priority="2">https://moba-hgh.de/updateserver/extensions/updates/plg_stophitcounts.xml</server>
-	</updateservers>
-	<scriptfile>script.php</scriptfile>
-	<files folder="site">
-		<folder>assets</folder>
-		<folder>language</folder>
-		<folder>models</folder>
-		<filename>index.html</filename>
-		<filename plugin="stophitcounts">stophitcounts.php</filename>
-		<filename>stophitcounts_CHANGELOG.php</filename>
-	</files>
-	<media destination="plg_stophitcounts" folder="site/assets">
-		<folder>images</folder>
-	</media>
-	<params/>
+  </description>
+  <scriptfile>install/script.php</scriptfile>
+  <install>
+    <sql/>
+  </install>
+  <uninstall>
+    <sql/>
+  </uninstall>
+  <update>
+    <schemas/>
+  </update>
+  <updateservers>
+    <server name="HGHs UpdateServer - stopHitCounts" type="extension" priority="2">https://moba-hgh.de/updateserver/extensions/updates/plg_stophitcounts.xml</server>
+  </updateservers>
+  <files folder="site">
+    <folder>assets</folder>
+    <folder>install</folder>
+    <folder>language</folder>
+    <folder>models</folder>
+    <filename>index.html</filename>
+    <filename plugin="stophitcounts">stophitcounts.php</filename>
+    <filename>stophitcounts_CHANGELOG.php</filename>
+  </files>
+  <media destination="plg_stophitcounts" folder="site/assets">
+	<folder>images</folder>
+  </media>
+  <params/>
   <config>
     <fields name="params">
 		<fieldset name="basic">
@@ -113,8 +114,8 @@
 				<option value="1">JYES</option>
 			</field>
 			<field name="log_path" type="text" readonly="true" default="../administrator/logs" label="PLG_SYSTEM_SHC_LOG_PATH_TXT" description="PLG_SYSTEM_SHC_LOG_PATH_DESC"/>
-			<field name="log_dsn"  type="text" readonly="true" default="plg_stophitcounts-log" label="PLG_SYSTEM_SHC_LOG_DSN_TXT" description="PLG_SYSTEM_SHC_LOG_DSN_DESC"/>
+			<field name="log_dsn"  type="text" readonly="true" default="plg_stophitcounts-log" label="PLG_SYSTEM_SHC_LOG_DSN_TXT"  description="PLG_SYSTEM_SHC_LOG_DSN_DESC"/>
 		</fieldset>
 	</fields>
-  </config>
+</config>
 </extension>

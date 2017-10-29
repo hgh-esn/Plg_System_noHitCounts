@@ -51,27 +51,47 @@ class plgSystemstopHitCounts extends JPlugin
 
 //       $this->logHitCounter($this->params->get('log_active'),$article->id,-);
 
+      /********************************************************
+       * ignore counting in featured area
+       ********************************************************/      
+      if ( $context == 'com_content.featured' || $context == 'com_content.category' )
+      {
+         $msg = 'user= ' .$user->id .' no counting in featuered/category area';
+//       echo '<br />' .$msg;
+              
+         if ( $this->params->get('log_active') )
+         {
+            JLog::add($msg);
+         }
+        
+         $this->decrHitCounter($this->params->get('log_active'),$article->id,$article->hits);
+         return;
+      }
+
       /**********************************************
+       * user-check:
        * First of all, we check if it is a bot-access
        * Then the counter is decremented because there 
        * was already a hit
-       **********************************************/      
+       **********************************************/    
       if ( $this->params->get('disable_bots') )
       {
          $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'unknown';
          
-         // returns true or false
+         // we call "checkBot" it returns true or false
          
          if ( $this->checkBot($user_agent) )
-         {
-			$msg = 'Bot - decr. hitCounter.';
+         {        
+            $msg = '[Bot]user - decr. hitCounter.';
+//          echo '<br />' .$msg;
+
             $this->decrHitCounter($this->params->get('log_active'),$article->id,$article->hits);
-/*            
-            if ($this->params->get('log_active'))
+             
+            if ( $this->params->get('log_active') )
             {
                JLog::add($msg);
             }
-*/           
+            
 //          $this-> logHitCounter($this->params->get('log_active'),$article->id,'bot',-);
             return;
          }               
@@ -95,31 +115,14 @@ class plgSystemstopHitCounts extends JPlugin
        **************************************************/       
       if ( $context  == 'com_content.article' && $user->id == 0 )
       {
-         $msg = 'user is "public" - Article-HitCounter stays counting.';
+         $msg = '[public]user - HitCounter stays counting.';
 //       echo '<br />' .$msg;
 
-         if ($this->params->get('log_active'))
+         if ( $this->params->get('log_active') )
          {
             JLog::add($msg);
          }
          return;
-      }
-
-      /********************************************************
-       * ignore counting in featured area
-       ********************************************************/      
-      if ( $context == 'com_content.featured' || $context == 'com_content.category' )
-      {
-         $msg = 'loginuser= ' .$user->id .' no counting in featuered/category area';
-         //      echo '<br />' .$msg;
-              
-        if ($this->params->get('log_active'))
-        {
-           JLog::add($msg);
-        }
-        
-        $this->decrHitCounter($this->params->get('log_active'),$article->id,$article->hits);
-        return;
       }
 
       /*******************************************************
@@ -151,7 +154,7 @@ class plgSystemstopHitCounts extends JPlugin
             $msg = 'loggedIn-user= ' .$user->id .' is blocked from counting.';
 //          echo '<br />' .$msg;
 
-            if ($this->params->get('log_active'))
+            if ( $this->params->get('log_active') )
             {
                JLog::add($msg);
             } 
@@ -210,20 +213,37 @@ class plgSystemstopHitCounts extends JPlugin
          $db = JFactory::getDbo();
          $db->setQuery('UPDATE #__content SET hits = hits - 1 WHERE id = ' .$id);
          $db->execute();
+
+         if ( $db->getErrorNum() ) 
+         {
+            $msg = $db->getErrorMsg();
+            
+//          echo $msg;
+            if ( $log_active )
+            {
+               JLog::add($msg);
+            } 
+            return false;
+         }
+                 
+         $msg = '- decr. hitCounter[id/hits] = ' .$id .'/' .$hits;
          
+//       echo '<br />' .$msg;       
          if ( $log_active )
          {
-            JLog::add('- decr. hitCounter[id/hits] = ' .$id .'/' .$hits);
+            JLog::add($msg);
          }
-         return 'true';
+         return true;
       }
       else
-      {
+      {         
+         $msg = 'no decm. hitCounter, because of ZERO hits in article/hits] =' .$id .'/'.$hits;
+//       echo '<br />' .$msg; 
          if ( $log_active )
          {
-            JLog::add('no decm. hitCounter, because of ZERO hits in article/hits] =' .$id .'/'.$hits);
+            JLog::add($msg);
          }
-         return 'false';
+         return false;
       }
    }
    
@@ -236,6 +256,18 @@ class plgSystemstopHitCounts extends JPlugin
 //      $query->where('id = ' .$id);   //put your condition here 
       $query = "SELECT hits FROM #__content WHERE id=" .$id;    
       $db->setQuery($query);
+
+      if ( $db->getErrorNum() ) 
+      {
+         $msg = $db->getErrorMsg();
+         
+//          echo $msg;
+         if ( $log_active )
+         {
+            JLog::add($msg);
+         } 
+         return false;
+      }
       //echo $db->getQuery();exit;//SQL query string  
       //check if error
 /*      if ($db->getErrorNum()) {
@@ -244,10 +276,12 @@ class plgSystemstopHitCounts extends JPlugin
       }
 */      
        $hits =  $db->loadResult();
-               
+
+       $msg = '- db-logHitCounter[id/hits] = ' .$id .'/' .$hits .'[ ' .$nr .']';
+//     echo '<br />' .$msg;
        if ( $log_active )
        {
-          JLog::add('- db-logHitCounter[id/hits] = ' .$id .'/' .$hits .'[ ' .$nr .']');
+          JLog::add($msg);
        } 
           
       return $hits;
@@ -326,11 +360,12 @@ class plgSystemstopHitCounts extends JPlugin
     {
       if ( stristr($user_agent, $bots[$i]) ) 
       {
- //      echo '<br />'.'bot=' .$bots[$i];
-      
+
+       $msg = 'Bot - ' .$bots[$i] .' - found';
+//     echo '<br />' .$msg;      
          if ( $this->params->get('log_active') )
          {
-            JLog::add('Bot - ' .$bots[$i] .' - found');
+            JLog::add($msg);
          }
          return true;        
       }
@@ -386,4 +421,4 @@ jimport('joomla.log.log');
 // Pass the array of configuration options    
 
 JLog::addLogger($options, JLog::INFO);
-
+?>
