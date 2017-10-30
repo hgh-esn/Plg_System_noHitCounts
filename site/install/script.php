@@ -1,7 +1,5 @@
 <?php
 /**
- * Script file of HelloWorld component.
- *
  * The name of this class is dependent on the component being installed.
  * The class name should have the component's name, directly followed by
  * the text InstallerScript (ex:. com_helloWorldInstallerScript).
@@ -14,9 +12,9 @@
  * <scriptfile>script.php</scriptfile>
  *
  * @package     Joomla.Administrator
- * @subpackage  com_helloworld
+ * @subpackage  plg_stophitcounts
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2017 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -147,7 +145,7 @@ class plgsystemstophitcountsInstallerScript
       else
      {
 //      echo 'Pfad: ' .$pfad .' nicht gefunden';
-        echo 'nothing to do !';       
+        echo 'nothing to do! ;)';       
      }
     }
 }
