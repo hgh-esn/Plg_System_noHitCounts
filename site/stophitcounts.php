@@ -115,7 +115,7 @@ class plgSystemstopHitCounts extends JPlugin
        **************************************************/       
       if ( $context  == 'com_content.article' && $user->id == 0 )
       {
-         $msg = '[public]user - HitCounter stays counting.';
+         $msg = '[public]user - HitCounter stays counting for article[' .$article->id .'].';
 //       echo '<br />' .$msg;
 
          if ( $this->params->get('log_active') )
@@ -132,7 +132,7 @@ class plgSystemstopHitCounts extends JPlugin
       {
          if ( $context  == 'com_content.article' && $user->id = $article->created_by )
          {
-            $msg = 'loggedIn-user=' .$user->id .' matched >created_by< - no counting.';
+            $msg = 'loggedIn-user=' .$user->id .' matched >created_by< [' .$article->id .'] - no counting.';
 //          echo '<br />' .$msg;
               
             if ( $this->params->get('log_active') )
