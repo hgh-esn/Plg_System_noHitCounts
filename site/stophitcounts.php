@@ -51,6 +51,19 @@ class plgSystemstopHitCounts extends JPlugin
 
 //       $this->logHitCounter($this->params->get('log_active'),$article->id,-);
 
+      /***********************************
+       * get act. UserData
+       ***********************************/
+      $user = JFactory::getUser();
+      $groups     = $user->groups;
+      $authgroups = $user->getAuthorisedGroups();
+      $userid     = $user->id;
+      
+//    echo '<br />' .'userid=' .$user->id;
+//    echo '<br />' .'name='   .$user->name;
+//    echo '<br />';
+//    echo '<br />' .'context='.$context;
+
       /********************************************************
        * ignore counting in featured area
        ********************************************************/      
@@ -89,26 +102,13 @@ class plgSystemstopHitCounts extends JPlugin
              
             if ( $this->params->get('log_active') )
             {
-               JLog::add($msg);
+//             JLog::add($msg);  // meaasage already in checkbot !
             }
             
 //          $this-> logHitCounter($this->params->get('log_active'),$article->id,'bot',-);
             return;
          }               
       }
-
-      /***********************************
-       * get act. UserData
-       ***********************************/
-      $user = JFactory::getUser();
-      $groups     = $user->groups;
-      $authgroups = $user->getAuthorisedGroups();
-      $userid     = $user->id;
-      
-//    echo '<br />' .'userid=' .$user->id;
-//    echo '<br />' .'name='   .$user->name;
-//    echo '<br />';
-//    echo '<br />' .'context='.$context;
 
       /**************************************************
        * Check if public-user matches
@@ -416,7 +416,7 @@ jimport('joomla.log.log');
     // (optional) you can change the directory 
 
     $options = array('text_file'      => 'plg_stophitcounts-log',            
-                     'text_file_path' => '../administrator/logs');
+                     'text_file_path' => 'administrator/logs');
 
 // Pass the array of configuration options    
 
