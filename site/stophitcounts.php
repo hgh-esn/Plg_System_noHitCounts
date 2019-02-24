@@ -130,7 +130,8 @@ class plgSystemstopHitCounts extends JPlugin
        *******************************************************/    
       if ( $this->params->get('disable_selfcreated_only') )
       {
-         if ( $context  == 'com_content.article' && $user->id = $article->created_by )
+//       if ( $context  == 'com_content.article' && $user->id = $article->created_by )
+         if ( $context  == 'com_content.article' && $user->id == $article->created_by )
          {
             $msg = 'loggedIn-user=' .$user->id .' matched >created_by< [' .$article->id .'] - no counting.';
 //          echo '<br />' .$msg;
