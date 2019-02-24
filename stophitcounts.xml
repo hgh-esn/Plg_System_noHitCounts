@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" version="3.0" method="upgrade" group="system">
   <name>System - stopHitCounts</name>
-  <creationDate>25-Feb-2019</creationDate>
+  <creationDate>2019-02-25</creationDate>
   <author>Hans-Guenter Heiserholt [HGH]</author>
   <authorEmail>hgh-esn@t-online.de</authorEmail>
   <authorUrl>moba-hgh/joomla</authorUrl>
