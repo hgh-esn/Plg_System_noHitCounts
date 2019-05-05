@@ -103,9 +103,9 @@
 		</fieldset>
 		<fieldset  name="SHC_std_options" addfieldpath="/plugins/system/plg_stophitcounts/images/models/fields">
 			<field name="disable_selfcreated_only" type="checkbox" default="1" label="PLG_SYSTEM_SHC_DISABLE_HIT_COUNT_SELF_ONLY_LABEL_TXT" description="PLG_SYSTEM_SHC_DISABLE_HIT_COUNT_SELF_ONLY_LABEL_DESC"/>
-			<field name="disable_users" type="sql" label="PLG_SYSTEM_SHC_DISABLE_USER_HIT_COUNT_LABEL_TXT" description="PLG_SYSTEM_SHC_DISABLE_USER_HIT_COUNT_LABEL_DESC" query="SELECT u.id , u.name FROM #__users as u inner join #__user_usergroup_map AS ugm ON ugm.user_id = u.id where ugm.group_id=2" multiple="multiple" key_field="id" value_field="name"/>
+			<field name="disable_users"  type="sql" label="PLG_SYSTEM_SHC_DISABLE_USER_HIT_COUNT_LABEL_TXT" description="PLG_SYSTEM_SHC_DISABLE_USER_HIT_COUNT_LABEL_DESC" query="SELECT u.id , u.name FROM #__users as u inner join #__user_usergroup_map AS ugm ON ugm.user_id = u.id where ugm.group_id=2" multiple="multiple" key_field="id" value_field="name"/>
 			<field name="disable_groups" type="usergrouplist" multiple="true" size="60" default="" label="PLG_SYSTEM_SHC_DISABLE_GROUP_HIT_COUNT_LABEL_TXT" description="PLG_SYSTEM_SHC_DISABLE_GROUP_HIT_COUNT_LABEL_DESC"/>
-			<field name="disable_bots" type="radio" class="btn-group" data-toggle="buttons-radio" default="1" label="PLG_SYSTEM_SHC_DISABLE_BOTS_HIT_COUNT_LABEL_TXT" description="PLG_SYSTEM_SHC_DISABLE_BOTS_HIT_COUNT_LABEL_DESC">
+			<field name="disable_bots"   type="radio" class="btn-group" data-toggle="buttons-radio" default="1" label="PLG_SYSTEM_SHC_DISABLE_BOTS_HIT_COUNT_LABEL_TXT" description="PLG_SYSTEM_SHC_DISABLE_BOTS_HIT_COUNT_LABEL_DESC">
 				<option value="0">JNO</option>
 				<option value="1">JYES</option>
 			</field>
@@ -117,8 +117,14 @@
 				<option value="0">JNO</option>
 				<option value="1">JYES</option>
 			</field>
-			<field name="log_path" type="text" readonly="true" default="../administrator/logs" label="PLG_SYSTEM_SHC_LOG_PATH_TXT" description="PLG_SYSTEM_SHC_LOG_PATH_DESC"/>
-			<field name="log_dsn"  type="text" readonly="true" default="plg_stophitcounts-log" label="PLG_SYSTEM_SHC_LOG_DSN_TXT"  description="PLG_SYSTEM_SHC_LOG_DSN_DESC"/>
+			<field name="log_path" type="text" readonly="true" default="../administrator/logs" label="PLG_SYSTEM_SHC_LOG_PATH_TXT"     description="PLG_SYSTEM_SHC_LOG_PATH_DESC"/>
+			<field name="log_dsn"  type="text" readonly="true" default="plg_stophitcounts-log" label="PLG_SYSTEM_SHC_LOG_DSN_TXT"      description="PLG_SYSTEM_SHC_LOG_DSN_DESC"/>
+			<field name="vsite_qookie_time" type="list"  default="3600"  label="PLG_SYSTEM_SHC_QOOKIE_VSITE_TIME_TXT"  description="PLG_SYSTEM_SHC_QOOKIE_VSITE_TIME_DESC">
+				<option value="1800">1/2h - 1800 sec.</option>
+				<option value="3600">1h - 3600 sec.</option>
+				<option value="7200">2h - 7200 sec.</option>
+				<option value="10880">3h - 10800 sec.</option>
+			</field>
 		</fieldset>
 	</fields>
 </config>
