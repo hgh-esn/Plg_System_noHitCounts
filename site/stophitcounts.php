@@ -4,8 +4,8 @@
  * @subpackage Base
  * @author     Hans-Guenter Heiserholt [HGH] {@link moba-hgh/joomla}
  * @author     Created on 10-Oct-2017
- * @lastUpdate 05-Mai-2019
- * @version    1.2.0
+ * @lastUpdate 07-Mai-2019
+ * @version    1.2.1
  * @license    GNU/GPL
  */
 
@@ -44,18 +44,17 @@ class plgSystemstopHitCounts extends JPlugin
 
     /**
      *  onContentBeforeDisplay
+	 *
+	 *  V1.2.1  190507  changed  $imitstart=0  because of errors in content->media
      */
-	public function onContentBeforeDisplay($context, &$article, &$params, $limitstart)
-	{ 
 
+	public  function onContentBeforeDisplay($context, &$article, &$params, $limitstart=0)
+	{
 		/***********************************
 		 * get act. UserData
 		 ***********************************/
 		$user 	  	= JFactory::getUser();
-		$groups     = $user->groups;
-		$authgroups = $user->getAuthorisedGroups();
-		$userid     = $user->id;
-      
+ 
 		/**********************************************
 		 * First of all, we check if it is a bot-access
 		 * Then the counter is decremented because there 
@@ -70,13 +69,9 @@ class plgSystemstopHitCounts extends JPlugin
 			if ( $this->checkBot($user_agent) !== false )
 			{        
 				$msg = '[Bot]user - decr. hitCounter.';
-
+				
 				$this->decrHitCounter($this->params->get('log_active'),$article->id,$article->hits);
-			 
-				if ( $this->params->get('log_active') )
-				{
-//					JLog::add($msg);  // set message already in checkbot !
-				}
+				
 				return;
 			}               
 		}
@@ -89,7 +84,6 @@ class plgSystemstopHitCounts extends JPlugin
 			if ( in_array($user->id, $this->params->get('disable_users')) )
 			{
 				$msg = 'loggedIn-user= ' .$user->id .' is blocked from counting.';
-
 				if ( $this->params->get('log_active') )
 				{
 					JLog::add($msg);
@@ -101,13 +95,13 @@ class plgSystemstopHitCounts extends JPlugin
 
 		/***************************************
 		 * Check group(s) to ignore for counting
-		 ***************************************/
-		if ( $this->params->get('disable_groups') )
+		 ***************************************/		
+		
+		if ( $this->params->get('disable_groups')  )
 		{
-			foreach ( $this->params->get('disable_groups') as $key => $value ) 
+			foreach ( $this->params->get('disable_groups') as $key => $group ) 
 			{         
-//          	echo '<br />' .'key/value=' .$key .'/' .$value;         
-				if ( in_array( $value , $authgroups ) )  
+				if ( in_array( $group , $user->getAuthorisedGroups() ) )  
 				{
 					$msg ='loggedIn-user= ' .$user->id .' of noncounting - group.';
 					if ( $this->params->get('log_active') )
@@ -124,52 +118,54 @@ class plgSystemstopHitCounts extends JPlugin
 		 * Check if public / registrated-user updates article
 		 **************************************************/       
 		if 	( $context  == 'com_content.article' AND 
-				( 	$user->groups[2] == 2   /* registrated */
-					|| $user->id 	 == 0	/* public      */
+				( 	$user->groups[2] == 2   /* registrated */ 	|| 
+					$user->id 	 == 0	/* public      */
 				)
 			)   
 		{
-			$name = 'HitCnt-Qookie';
-			$visqtime = $this->params->get('vsite_qookie_time');
+			$sep  	= ',';							// separator  
+			$name 	= 'HitCnt-Qookie';
+			$pov 	= $this->params->get('qookie_pov');	// period of validity for qookie
 			
-			if ( isset($_COOKIE[$name]) ) 
+			if ( isset($_COOKIE[$name]) )   // qookie exists ? 
 			{
-
-				$val = $_COOKIE[$name]; 
+				$val = $_COOKIE[$name];     // get qookie-value 
 				if ( strpos($val,$article->id) === false ) 
 				{
-					$val = $val .$article->id .',';
-					setcookie($name, $val, time()+$visqtime, $path='/');  /* verfällt in x Stunden */
+ 					$val .= $article->id .$sep;
+					setcookie($name, $val, time()+$pov, $path='/');     			/* verfällt in x Stunden */
 				}
 				else 
-				{
-					$this->decrHitCounter($this->params->get('log_active'),$article->id,$article->hits);					
-					$msg = '[registrated]user - HitCounter stops counting because of updating article[' .$article->id .'].';
+				{					
+					$this->decrHitCounter($this->params->get('log_active'),$article->id,$article->hits);
+
+					$msg = '[public/registrated]user - noHitcount because of reloading article[' .$article->id .'].';
+					if ( $this->params->get('log_active') )
+					{
+						JLog::add($msg);
+					}          
 				}
 			}
-			else {
-				setcookie($name, $article->id .',', time()+$visqtime, $path='/');  /* verfällt in x Stunden */
+			else
+			{
+				setcookie($name, $article->id .$sep, time()+$pov, $path='/');	/* verfällt in x Stunden */
 			}
 
-			if ( $this->params->get('log_active') )
-			{
-				JLog::add($msg);
-			}
 			return;
 		}
 
 		/********************************************************
+//     	 * ignore counting in featured area
 		 * ignore counting in non-article area
 		 ********************************************************/      
 		if ( $context != 'com_content.article' )
 		{
+			/* no correction of hitCounter, because joomla has´n't already count itself.*/
 			$msg = 'no counting in non-article areas';
-              
 			if ( $this->params->get('log_active') )
 			{
 				JLog::add($msg);
 			}
-        
 			return;
 		}
 
@@ -180,8 +176,7 @@ class plgSystemstopHitCounts extends JPlugin
 		{
 			if ( $context  == 'com_content.article' && $user->id == $article->created_by )
 			{
-				$msg = 'loggedIn-user=' .$user->id .' matched >created_by< [' .$article->id .'] - no counting.';
-              
+				$msg = 'loggedIn-user=' .$user->id .' matched >created_by< [' .$article->id .'] - no counting.';              
 				if ( $this->params->get('log_active') )
 				{
                   JLog::add($msg);
@@ -203,6 +198,7 @@ class plgSystemstopHitCounts extends JPlugin
      */
     
 	public function decrHitCounter($log_active,$id,$hits)
+//	private function decrHitCounter($log_active,$id,$hits)
 	{
 		if ( $hits > 0 )
 		{       
@@ -224,7 +220,6 @@ class plgSystemstopHitCounts extends JPlugin
 			}
                  
 			$msg = '- decr. hitCounter[art-id/hits]=' .$id .'/' .$hits;
-         
 			if ( $log_active )
 			{
 				JLog::add($msg);
@@ -253,7 +248,6 @@ class plgSystemstopHitCounts extends JPlugin
 		if ( $db->getErrorNum() ) 
 		{
 			$msg = $db->getErrorMsg();
-         
 			if ( $log_active )
 			{
 				JLog::add($msg);
@@ -262,8 +256,8 @@ class plgSystemstopHitCounts extends JPlugin
 		}
       
 		$hits =  $db->loadResult();
-
 		$msg = '- db-logHitCounter[id/hits] = ' .$id .'/' .$hits .'[ ' .$nr .']';
+		
 		if ( $log_active )
 		{
 			JLog::add($msg);
@@ -277,8 +271,8 @@ class plgSystemstopHitCounts extends JPlugin
      * @access private
      * @param $user_agent string The user agent data
      * @return bool 
-	 * 		true  if 		 match (is bot), 
-	 * 		false if doesn't match (not a bot)
+	 * 		true  if 	match -> is bot 
+	 * 		false if no match -> not a bot
      * @since 1.0.0
      ************************************************/
 
@@ -300,7 +294,7 @@ class plgSystemstopHitCounts extends JPlugin
 	 	return false;
 	}
 
-	private function checkBot($user_agent)
+	public  function checkBot($user_agent)
 	{
 		/****************************************************************************************** 
 		 * for user_agent details see:
@@ -418,6 +412,7 @@ class plgSystemstopHitCounts extends JPlugin
 	} // end-function
 
 } // end-class
+
 /* 
  * Helper for logging
  * @package    Notes
