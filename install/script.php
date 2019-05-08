@@ -125,7 +125,7 @@ class plgsystemstophitcountsInstallerScript
 		if ( $shc_parms_db !== $shc_parms)
 		{
 			echo '<br /> params-update for extension necessary';
-			$query = "UPDATE `#_extensions` SET params = " .$shc_parms ." WHERE extension_id=" $exid;
+			$query = "UPDATE `#_extensions` SET params = " .$shc_parms ." WHERE extension_id=" .$exid;
 			$db->execute();
 		}
 		else
