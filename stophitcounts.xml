@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" version="3.0" method="upgrade" group="system">
   <name>System - stopHitCounts</name>
-  <creationDate>2019-05-07</creationDate>
+  <creationDate>2019-05-09</creationDate>
   <author>Hans-Guenter Heiserholt [HGH]</author>
   <authorEmail>hgh-esn@t-online.de</authorEmail>
   <authorUrl>moba-hgh/joomla</authorUrl>
   <copyright>JED-HGH | Joomla Extension Development by HGH</copyright>
   <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-  <version>1.2.1</version>
+  <version>1.2.2</version>
   <description>Unterdrückt das Weiterzählen des Artikel-Zugriffzählers für Bots, bestimmte Benutzer und/oder Rechtegruppen.
 <![CDATA[
    <hr />
@@ -103,9 +103,9 @@
 		</fieldset>
 		<fieldset  name="SHC_std_options" addfieldpath="/plugins/system/plg_stophitcounts/images/models/fields">
 			<field name="disable_selfcreated_only" type="checkbox" default="1" label="PLG_SYSTEM_SHC_DISABLE_HIT_COUNT_SELF_ONLY_LABEL_TXT" description="PLG_SYSTEM_SHC_DISABLE_HIT_COUNT_SELF_ONLY_LABEL_DESC"/>
-			<field name="disable_users"  type="sql" label="PLG_SYSTEM_SHC_DISABLE_USER_HIT_COUNT_LABEL_TXT" description="PLG_SYSTEM_SHC_DISABLE_USER_HIT_COUNT_LABEL_DESC" query="SELECT u.id , u.name FROM #__users as u inner join #__user_usergroup_map AS ugm ON ugm.user_id = u.id where ugm.group_id=2" multiple="multiple" key_field="id" value_field="name"/>
-			<field name="disable_groups" type="usergrouplist" multiple="true" size="60" default="" label="PLG_SYSTEM_SHC_DISABLE_GROUP_HIT_COUNT_LABEL_TXT" description="PLG_SYSTEM_SHC_DISABLE_GROUP_HIT_COUNT_LABEL_DESC"/>
-			<field name="disable_bots"   type="radio" class="btn-group" data-toggle="buttons-radio" default="1" label="PLG_SYSTEM_SHC_DISABLE_BOTS_HIT_COUNT_LABEL_TXT" description="PLG_SYSTEM_SHC_DISABLE_BOTS_HIT_COUNT_LABEL_DESC">
+			<field name="disabled_users"  type="sql" label="PLG_SYSTEM_SHC_DISABLE_USER_HIT_COUNT_LABEL_TXT" description="PLG_SYSTEM_SHC_DISABLE_USER_HIT_COUNT_LABEL_DESC" query="SELECT u.id , u.name FROM #__users as u inner join #__user_usergroup_map AS ugm ON ugm.user_id = u.id where ugm.group_id=2" multiple="multiple" key_field="id" value_field="name"/>
+			<field name="disabled_groups" type="usergrouplist" multiple="true" size="60" default="" label="PLG_SYSTEM_SHC_DISABLE_GROUP_HIT_COUNT_LABEL_TXT" description="PLG_SYSTEM_SHC_DISABLE_GROUP_HIT_COUNT_LABEL_DESC"/>
+			<field name="disable_bots"    type="radio" class="btn-group" data-toggle="buttons-radio" default="1" label="PLG_SYSTEM_SHC_DISABLE_BOTS_HIT_COUNT_LABEL_TXT" description="PLG_SYSTEM_SHC_DISABLE_BOTS_HIT_COUNT_LABEL_DESC">
 				<option value="0">JNO</option>
 				<option value="1">JYES</option>
 			</field>
