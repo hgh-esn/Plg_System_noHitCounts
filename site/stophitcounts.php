@@ -298,7 +298,8 @@ class plgSystemstopHitCounts extends JPlugin
      * @since 1.0.0
      ************************************************/
 
-	private function CheckBotDetails($botarray, $user_agent, $seq, $logparm)
+//	private function CheckBotDetails($botarray, $user_agent, $seq, $logparm)
+	function CheckBotDetails($botarray, $user_agent, $seq, $logparm)
 	{ 
 		for($i=0; $i <= count($botarray); $i++)
 		{
@@ -316,7 +317,8 @@ class plgSystemstopHitCounts extends JPlugin
 	 	return false;
 	}
 
-	private function checkBot($user_agent)
+//	private function checkBot($user_agent)
+	public function checkBot($user_agent)
 	{
 		/****************************************************************************************** 
 		 * for user_agent details see:
