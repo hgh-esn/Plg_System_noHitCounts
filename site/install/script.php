@@ -20,7 +20,8 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-
+use JFactory;
+use JText;
 class plgsystemstophitcountsInstallerScript
 {
     /**
@@ -45,7 +46,64 @@ class plgsystemstophitcountsInstallerScript
      */
     public function uninstall($parent) 
     {
-        echo '<p>' . JText::_('stophitcounts_UNINSTALL_TEXT') . '</p>';
+		// Start prefight test
+		
+		echo '<p>' . JText::_('stophitcounts_PREFLIGHT_' . $type . ' We do some updates') . '</p>';
+
+		/*********************************************************************
+		 * preflight actions
+		 * in V1.2.2 params items have been changed there names.
+		 * disable_users  -> disabled_users
+		 * disable_groups -> disabled_groups
+		 * this changes have to be done also in the DB to already existing entries
+		 *********************************************************************/
+		$db =JFactory::getDBO();
+		$query = 'SELECT params FROM #__extensions WHERE name LIKE "%stophitcount%"';
+		$db->setQuery($query);
+		$shc_parms_db =  $db->loadResult();
+		
+		$query = 'SELECT extension_id FROM #__extensions WHERE name LIKE "%stophitcount%"';
+		$db->setQuery($query);
+		$shc_exid =  $db->loadResult();
+
+//					echo '<br />' .$shc_parms_db;
+//					echo '<br />' .$shc_exid;
+
+		// do rename parms
+
+		$shc_parms = str_ireplace('disable_users','disabled_users',$shc_parms_db,$cnt);
+//		echo '<br /> count rename - disable_/disabled_users : change-counts  =' .$cnt;
+		$shc_parms = str_ireplace('disable_groups','disabled_groups',$shc_parms,$cnt);
+//		echo '<br /> count rename - disable_/disabled_groups: change-counts =' .$cnt;
+
+//		echo '<br />' .$shc_parms;
+
+		if ( $shc_parms !== $shc_parms_db)
+		{
+			echo JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_PARMS_UPD_YES');
+ 			$query = 'UPDATE #__extensions SET params=' .$shc_parms .' WHERE extension_id=' .$shc_exid;
+ 			$db->execute();
+			if ( $db->getErrorNum() ) 
+			{
+				$msg = $db->getErrorMsg();
+				echo  JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_ERR');
+//				echo '<br />' .$msg;
+				{
+					JLog::add($msg);
+				} 
+				return false;
+			}
+			else { 
+				echo '<br />' .JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_OK');
+			}
+		}
+		else
+		{
+			echo JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_PARMS_UPD_NO');
+			echo '<hr><p>' .JText::_('stophitcounts_PREFLIGHT_' .$type .' => nothing to do') .'</p>';
+		}
+		
+		// End prefight test
     }
 
     /**
@@ -93,46 +151,6 @@ class plgsystemstophitcountsInstallerScript
     public function preflight($type, $parent)
     {
 		echo '<p>' . JText::_('stophitcounts_PREFLIGHT_' . $type . ' We do some updates') . '</p>';
-
-		/*********************************************************************
-		 * preflight actions
-		 * in V1.2.2 params items have been changed there names.
-		 * disable_users  -> disabled_users
-		 * disable_groups -> disabled_groups
-		 * this changes have to be done also in the DB to already existing entries
-		 *********************************************************************/
-		$db =JFactory::getDBO();
-		$query = "SELECT params 		FROM `#_extensions` WHERE name LIKE '%stophitcount%'";
-		$db->setQuery($query);
-		$shc_parms_db =  $db->loadResult();
-		
-		$query = "SELECT extension_id  	FROM `#_extensions` WHERE name LIKE '%stophitcount%'";
-		$db->setQuery($query);
-		$shc_exid =  $db->loadResult();
-
-//					echo '<br />' .$shc_parms_db;
-//					echo '<br />' .$shc_exid;
-
-		// do rename parms
-
-		$shc_parms = str_ireplace('disable_users','disabled_users',$shc_parms_db,$cnt);
-		echo '<br /> count rename - disable_/disabled_users : change-counts  =' .$cnt;
-		$shc_parms = str_ireplace('disable_groups','disabled_groups',$shc_parms,$cnt);
-		echo '<br /> count rename - disable_/disabled_groups: change-counts =' .$cnt;
-
-		echo '<br />' .$shc_parms;
-
-		if ( $shc_parms_db !== $shc_parms)
-		{
-			echo '<br /> params-update for extension necessary';
-			$query = "UPDATE `#_extensions` SET params = " .$shc_parms ." WHERE extension_id=" $exid;
-			$db->execute();
-		}
-		else
-		{
-			echo '<br /> NO params-update for extension necessary';
-			echo '<hr><p>' . JText::_('stophitcounts_PREFLIGHT_' .$type .' => nothing to do') . '</p>';
-		}
 		// END-preflight
 	}
 
