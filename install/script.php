@@ -46,10 +46,57 @@ class plgsystemstophitcountsInstallerScript
      */
     public function uninstall($parent) 
     {
-		// Start prefight test
-		
-		echo '<p>' .JText::_('stophitcounts_PREFLIGHT_' . $type . ' We do some updates') . '</p>';
+			echo 'Uninstall - nothing to do';
+    }
 
+    /**
+     * This method is called after a component is updated.
+     *
+     * @param  \stdClass $parent - Parent object calling object.
+     *
+     * @return void
+     */
+    public function update($parent) 
+    {
+        echo '<p>' . JText::_('stophitcounts_UPDATE_' . $type . ' see notes!') . '</p>';
+
+		// aktuelles Verzeichnis
+//      echo '<br />' .'akt. Verzeichnis= ' .getcwd() . "\n";
+
+		$dsn = '../plugins/system/stophitcounts/stophitcounts.xml';
+      
+		if (file_exists($dsn))
+		{
+			$xml = simplexml_load_file($dsn);
+//       	print_r($xml);
+//        	echo '<p>' . JText::sprintf('stophitcounts_UPDATE_TEXT', $parent->get('manifest')->version) . '</p>';
+			echo '<p>' .'Note: Die neue/aktuelle Version des Plugins ist jetzt: <b>' .$xml->version .'</b></p>';
+		} 
+		else
+		{
+			exit('Konnte ' .$dsn .' nicht öffnen.');
+//      	echo 'Konnte ' .$dsn .' nicht öffnen.';
+		}     
+	}
+
+    /**
+     * Runs just before any installation action is performed.
+     * Verifications and pre-requisites should run in this function.
+     *
+     * @param  string    $type   - Type of PreFlight action. Possible values are:
+     *                           - * install
+     *                           - * update
+     *                           - * discover_install
+     * @param  \stdClass $parent - Parent object calling object.
+     *
+     * @return void
+     */
+    public function preflight($type, $parent)
+    {
+		echo '<p>' . JText::_('stophitcounts_PREFLIGHT_' . $type . ' We do some updates') . '</p>';
+				
+		// Start prefight
+		
 		/*********************************************************************
 		 * preflight actions
 		 * in V1.2.2 params items have been changed there names.
@@ -108,54 +155,7 @@ class plgsystemstophitcountsInstallerScript
 		}
 		
 		// End prefight test
-    }
 
-    /**
-     * This method is called after a component is updated.
-     *
-     * @param  \stdClass $parent - Parent object calling object.
-     *
-     * @return void
-     */
-    public function update($parent) 
-    {
-        echo '<p>' . JText::_('stophitcounts_UPDATE_' . $type . ' see notes!') . '</p>';
-
-		// aktuelles Verzeichnis
-//      echo '<br />' .'akt. Verzeichnis= ' .getcwd() . "\n";
-
-		$dsn = '../plugins/system/stophitcounts/stophitcounts.xml';
-      
-		if (file_exists($dsn))
-		{
-			$xml = simplexml_load_file($dsn);
-//       	print_r($xml);
-//        	echo '<p>' . JText::sprintf('stophitcounts_UPDATE_TEXT', $parent->get('manifest')->version) . '</p>';
-			echo '<p>' .'Note: Die neue/aktuelle Version des Plugins ist jetzt: <b>' .$xml->version .'</b></p>';
-		} 
-		else
-		{
-			exit('Konnte ' .$dsn .' nicht öffnen.');
-//      	echo 'Konnte ' .$dsn .' nicht öffnen.';
-		}     
-	}
-
-    /**
-     * Runs just before any installation action is performed.
-     * Verifications and pre-requisites should run in this function.
-     *
-     * @param  string    $type   - Type of PreFlight action. Possible values are:
-     *                           - * install
-     *                           - * update
-     *                           - * discover_install
-     * @param  \stdClass $parent - Parent object calling object.
-     *
-     * @return void
-     */
-    public function preflight($type, $parent)
-    {
-		echo '<p>' . JText::_('stophitcounts_PREFLIGHT_' . $type . ' We do some updates') . '</p>';
-		// END-preflight
 	}
 
     /**
