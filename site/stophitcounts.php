@@ -5,7 +5,7 @@
  * @author     Hans-Guenter Heiserholt [HGH] {@link moba-hgh/joomla}
  * @author     Created on 10-Oct-2017
  * @lastUpdate 07-Mai-2019
- * @version    1.2.1
+ * @version    1.2.6
  * @license    GNU/GPL
  */
 
@@ -95,8 +95,10 @@ class plgSystemstopHitCounts extends JPlugin
 				}
 				
 				if ( $context == 'com_content.article' )
+				{
  					$this->decrHitCounter($this->params->get('log_active'),$article->id,$article->hits);
-				else /* do nothing */
+				}
+			//	else /* do nothing */
 				
 				return;
 			}
@@ -200,9 +202,10 @@ class plgSystemstopHitCounts extends JPlugin
 				}
 				
 				if ( $context == 'com_content.article' )
+				{
  					$this->decrHitCounter($this->params->get('log_active'),$article->id,$article->hits);
-				else /* do nothing */
-				
+				}
+			//	else /* do nothing */
 				return;      
 			}
 		} 
@@ -222,12 +225,12 @@ class plgSystemstopHitCounts extends JPlugin
 	{
 		if ( $hits > 0 )
 		{       
-         /****************************************************************************************
-          * we decrement the article-hitconter because it is already incremented by joomla before
-          ****************************************************************************************/
-         $db = JFactory::getDbo();
-         $db->setQuery('UPDATE #__content SET hits = hits - 1 WHERE id = ' .$id);
-         $db->execute();
+			/****************************************************************************************
+			 * we decrement the article-hitconter because it is already incremented by joomla before
+			 ****************************************************************************************/
+			$db = JFactory::getDbo();
+			$db->setQuery('UPDATE #__content SET hits = hits - 1 WHERE id = ' .$id);
+			$db->execute();
 
 			if ( $db->getErrorNum() ) 
 			{
