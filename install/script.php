@@ -20,7 +20,8 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-
+use JFactory;
+use JText;
 class plgsystemstophitcountsInstallerScript
 {
     /**
@@ -80,7 +81,7 @@ class plgsystemstophitcountsInstallerScript
 		if ( $shc_parms !== $shc_parms_db)
 		{
 			echo JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_PARMS_UPD_YES');
- 			$query = 'UPDATE #__extensions SET params=' .$shc_parms .' WHERE extension_id=' .$exid;
+ 			$query = 'UPDATE #__extensions SET params=' .$shc_parms .' WHERE extension_id=' .$shc_exid;
  			$db->execute();
 			if ( $db->getErrorNum() ) 
 			{
