@@ -20,7 +20,8 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-
+// use JFactory;
+// use JText;
 class plgsystemstophitcountsInstallerScript
 {
     /**
@@ -33,7 +34,7 @@ class plgsystemstophitcountsInstallerScript
     public function install($parent) 
     {
  //     $parent->getParent()->setRedirectURL('index.php?option=stophitcounts');
-         echo '<p>' . JText::_('stophitcounts_INSTALL_TEXT') . '</p>';
+         echo '<p>' .JText::_('stophitcounts_INSTALL_TEXT') . '</p>';
     }
 
     /**
@@ -47,7 +48,7 @@ class plgsystemstophitcountsInstallerScript
     {
 		// Start prefight test
 		
-		echo '<p>' . JText::_('stophitcounts_PREFLIGHT_' . $type . ' We do some updates') . '</p>';
+		echo '<p>' .JText::_('stophitcounts_PREFLIGHT_' . $type . ' We do some updates') . '</p>';
 
 		/*********************************************************************
 		 * preflight actions
@@ -59,33 +60,35 @@ class plgsystemstophitcountsInstallerScript
 		$db =JFactory::getDBO();
 		$query = 'SELECT params FROM #__extensions WHERE name LIKE "%stophitcount%"';
 		$db->setQuery($query);
-		$shc_parms_db =  $db->loadResult();
+		$shc_parms_readFromDB =  $db->loadResult();
 		
 		$query = 'SELECT extension_id FROM #__extensions WHERE name LIKE "%stophitcount%"';
 		$db->setQuery($query);
 		$shc_exid =  $db->loadResult();
 
-//					echo '<br />' .$shc_parms_db;
+//					echo '<br />' .$shc_parms_readFromDB;
 //					echo '<br />' .$shc_exid;
 
 		// do rename parms
 
-		$shc_parms = str_ireplace('disable_users','disabled_users',$shc_parms_db,$cnt);
+		$shc_parms = str_ireplace('disable_users','disabled_users',$shc_parms_readFromDB,$cnt);
 //		echo '<br /> count rename - disable_/disabled_users : change-counts  =' .$cnt;
 		$shc_parms = str_ireplace('disable_groups','disabled_groups',$shc_parms,$cnt);
 //		echo '<br /> count rename - disable_/disabled_groups: change-counts =' .$cnt;
 
 //		echo '<br />' .$shc_parms;
 
-		if ( $shc_parms !== $shc_parms_db)
+		if ( $shc_parms !== $shc_parms_readFromDB)
 		{
-			echo JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_PARMS_UPD_YES');
- 			$query = 'UPDATE #__extensions SET params=' .$shc_parms .' WHERE extension_id=' .$exid;
+ 			echo '<br />' 	.'PLG_SYSTEM_SHC_DB_UPDATE_MSG_PARMS_UPD_YES';
+			echo 	JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_PARMS_UPD_YES');
+ 			$query = 'UPDATE #__extensions SET params=' .$shc_parms .' WHERE extension_id=' .$shc_exid;
  			$db->execute();
 			if ( $db->getErrorNum() ) 
 			{
 				$msg = $db->getErrorMsg();
-				echo  JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_ERR');
+//				echo  '<br />' 	.'PLG_SYSTEM_SHC_DB_UPDATE_MSG_ERR');
+				echo  	JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_ERR');
 //				echo '<br />' .$msg;
 				{
 					JLog::add($msg);
@@ -93,12 +96,14 @@ class plgsystemstophitcountsInstallerScript
 				return false;
 			}
 			else { 
-				echo '<br />' .JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_OK');
+ 				echo '<br />' .'PLG_SYSTEM_SHC_DB_UPDATE_MSG_OK';
+				echo  JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_OK');
 			}
 		}
 		else
 		{
-			echo JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_PARMS_UPD_NO');
+ 			echo '<br />' .'PLG_SYSTEM_SHC_DB_UPDATE_MSG_PARMS_UPD_NO';
+			echo  JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_PARMS_UPD_NO');
 			echo '<hr><p>' .JText::_('stophitcounts_PREFLIGHT_' .$type .' => nothing to do') .'</p>';
 		}
 		
