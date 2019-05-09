@@ -1,109 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" version="3.0" method="upgrade" group="system">
-  <name>System - stopHitCounts</name>
-  <creationDate>2019-05-09</creationDate>
-  <author>Hans-Guenter Heiserholt [HGH]</author>
-  <authorEmail>hgh-esn@t-online.de</authorEmail>
-  <authorUrl>moba-hgh/joomla</authorUrl>
-  <copyright>JED-HGH | Joomla Extension Development by HGH</copyright>
-  <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-  <version>1.2.6</version>
-  <description>Unterdrückt das Weiterzählen des Artikel-Zugriffzählers für Bots, bestimmte Benutzer und/oder Rechtegruppen.
-<![CDATA[
-   <hr />
-   <div align="center">
-    <table border="0" width="90%">
-       <tr>
-          <td width="100%" colspan="2" style="font-size: 10pt;">
-            <div>
-               <h3>Plugin: Stop Hit Counts</h3>
-               <a href="https://moba-hgh.de/joomla/myextensions/myplugins/2762-stop-article-hitcounts-stophitcounts" target="_blank">
-               <img src="../media/plg_stophitcounts/images/shc-logo.png" style="margin-right: 5px; float: left" width="90" alt="shc-logo" title="Link zur Doku-WebSite" />
-               </a>
-               <img alt="Plugin_logo" height="30" src="../media/plg_stophitcounts/images/ext_plugin.png" style="margin-right: 5px; float: left"  />
-               <img alt="Joomla3x_logo" height="30" src="../media/plg_stophitcounts/images/shc-J3x.png" style="margin-right: 5px; float: left" width="75" />
-               <br /><br />
-               <div>
-               <img src="../media/plg_stophitcounts/images/DE.gif" style="margin-right: 5px; float: left" width="30" alt="de.gif" title="Deutsch" />           
-               <p style="text-align: justify;">Wenn sie das Plugin <span style="color:blue;">Stop HitCounts</span> nutzen, hinterlassen sie bitte ein Bewertung und einen Kommentar im  
-               <a href="http://extensions.joomla.org/extensions/site-management/analytics/content-stats" target="_blank">Joomla! Extensions Directory.</a>
-               Danke dafür.</p>
-               </div>
-               <div>
-               <img src="../media/plg_stophitcounts/images/gb.gif" style="margin-right: 5px; float: left" width="30" alt="gb.gif" title="English-GB" />
-               <img src="../media/plg_stophitcounts/images/us.gif" style="margin-right: 5px; float: left" width="30" alt="us.gif" title="English-US" />
-               <p style="text-align: justify;">If you use the Plugin <span style="color:blue;">Stop HitCounts</span>, please post a rating and a comment at the 
-               <a href="http://extensions.joomla.org/extensions/site-management/analytics/content-stats" target="_blank">Joomla! Extensions Directory.</a>
-               Thank you for that.</p>
-               </div>
-            </div>
-          </td>
-       </tr>
-       <tr>
-         <td width="100%" colspan="2" style="font-size: 10pt;">
-         <div name="language">
-            <div name="de-DE">
-              <hr>
-               <span style="color:red;"><strong>Wichtig:</strong></span>
-               <p style="text-align: justify;">Sie müssen das Plugin nun abschließend noch manuell aktivieren/konfigurieren. Dazu gehen sie zum <strong>Plugin Manager</strong><a href="index.php?option=com_plugins&amp;view=plugins"> (benutzen sie diesen Link)</a>. Aktivieren sie das Plugin und setzen sie die Zugriffsstufe auf "public".
-               In den Reitern (Standard/Erweitert) können sie die weitere Detail-Konfiguration vornehmen. Zuletzt speichern sie ihre Einstellungen.</p>
-               <span style="color:red;"><strong>Haftungsausschluss:</strong></span>
-               <p style="text-align: justify;">Diese Software wurde nach bestem Wissen für das CMS Joomla programmiert. Die Nutzung erfolgt aber trotzdem auf eigene Gefahr.
-               Der Author übernimmt keine Haftung für Fehler, die aus der Handhabung bzw. aus einer nicht geeigneten Joomla-Installation herrühren.</p>
-            </div>
-            <div name="en-EN">
-               <hr>
-               <span style="color:red;"><strong>Important:</strong></span>
-               <p style="text-align: justify;">Finally you must enable the plugin manually now. For that go to the <strong>plugin manager</strong><a href="index.php?option=com_plugins&amp;view=plugins"> (use this link)</a>. Enable the plugin, set the accesslevel to <strong>public</strong>. 
-               Then go to the tabs(standart/extendet) to configure the plugin and at least, <strong>save</strong> the settings.</p>
-               <span style="color:red;"><strong>Disclaimer:</strong></span>
-               <p style="text-align: justify;">This software has been programmed to the best knowledge for the CMS Joomla. The data is used but still at your own risk.
-               The author assumes no liability for errors arising from the handling or from an unsuitable Joomla installation.</p>
-            </div>
-          </div>        
-          </td>
-       </tr>
-    </table>
- </div>
-]]>
-  </description>
-  <scriptfile>install/script.php</scriptfile>
-  <install>
-    <sql/>
-  </install>
-  <uninstall>
-    <sql/>
-  </uninstall>
-  <update>
-    <schemas/>
-  </update>
-  <updateservers>
-    <server name="HGHs UpdateServer - stopHitCounts" type="extension" priority="2">https://moba-hgh.de/updateserver/extensions/updates/plg_stophitcounts.xml</server>
-  </updateservers>
-  <files folder="site">
-    <folder>assets</folder>
-    <folder>install</folder>
-    <folder>language</folder>
-    <folder>models</folder>
-    <filename>index.html</filename>
-    <filename plugin="stophitcounts">stophitcounts.php</filename>
-    <filename>stophitcounts_CHANGELOG.php</filename>
-  </files>
-  <languages folder="language">
-           <!--
-                    these files will be installed in the administrator/language folder.
+	<name>System - stopHitCounts</name>
+	<creationDate>2019-05-09</creationDate>
+	<author>Hans-Guenter Heiserholt [HGH]</author>
+	<authorEmail>hgh-esn@t-online.de</authorEmail>
+	<authorUrl>moba-hgh/joomla</authorUrl>
+	<copyright>JED-HGH | Joomla Extension Development by HGH</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<version>1.2.8</version>
+	<description>Unterdrückt das Weiterzählen des Artikel-Zugriffzählers für Bots, bestimmte Benutzer und/oder Rechtegruppen.
+	<![CDATA[
+	   <hr />
+	   <div align="center">
+		<table border="0" width="90%">
+		   <tr>
+			  <td width="100%" colspan="2" style="font-size: 10pt;">
+				<div>
+				   <h3>Plugin: Stop Hit Counts</h3>
+				   <a href="https://moba-hgh.de/joomla/myextensions/myplugins/2762-stop-article-hitcounts-stophitcounts" target="_blank">
+				   <img src="../media/plg_stophitcounts/images/shc-logo.png" style="margin-right: 5px; float: left" width="90" alt="shc-logo" title="Link zur Doku-WebSite" />
+				   </a>
+				   <img alt="Plugin_logo" height="30" src="../media/plg_stophitcounts/images/ext_plugin.png" style="margin-right: 5px; float: left"  />
+				   <img alt="Joomla3x_logo" height="30" src="../media/plg_stophitcounts/images/shc-J3x.png" style="margin-right: 5px; float: left" width="75" />
+				   <br /><br />
+				   <div>
+				   <img src="../media/plg_stophitcounts/images/DE.gif" style="margin-right: 5px; float: left" width="30" alt="de.gif" title="Deutsch" />           
+				   <p style="text-align: justify;">Wenn sie das Plugin <span style="color:blue;">Stop HitCounts</span> nutzen, hinterlassen sie bitte ein Bewertung und einen Kommentar im  
+				   <a href="http://extensions.joomla.org/extensions/site-management/analytics/content-stats" target="_blank">Joomla! Extensions Directory.</a>
+				   Danke dafür.</p>
+				   </div>
+				   <div>
+				   <img src="../media/plg_stophitcounts/images/gb.gif" style="margin-right: 5px; float: left" width="30" alt="gb.gif" title="English-GB" />
+				   <img src="../media/plg_stophitcounts/images/us.gif" style="margin-right: 5px; float: left" width="30" alt="us.gif" title="English-US" />
+				   <p style="text-align: justify;">If you use the Plugin <span style="color:blue;">Stop HitCounts</span>, please post a rating and a comment at the 
+				   <a href="http://extensions.joomla.org/extensions/site-management/analytics/content-stats" target="_blank">Joomla! Extensions Directory.</a>
+				   Thank you for that.</p>
+				   </div>
+				</div>
+			  </td>
+		   </tr>
+		   <tr>
+			 <td width="100%" colspan="2" style="font-size: 10pt;">
+			 <div name="language">
+				<div name="de-DE">
+				  <hr>
+				   <span style="color:red;"><strong>Wichtig:</strong></span>
+				   <p style="text-align: justify;">Sie müssen das Plugin nun abschließend noch manuell aktivieren/konfigurieren. Dazu gehen sie zum <strong>Plugin Manager</strong><a href="index.php?option=com_plugins&amp;view=plugins"> (benutzen sie diesen Link)</a>. Aktivieren sie das Plugin und setzen sie die Zugriffsstufe auf "public".
+				   In den Reitern (Standard/Erweitert) können sie die weitere Detail-Konfiguration vornehmen. Zuletzt speichern sie ihre Einstellungen.</p>
+				   <span style="color:red;"><strong>Haftungsausschluss:</strong></span>
+				   <p style="text-align: justify;">Diese Software wurde nach bestem Wissen für das CMS Joomla programmiert. Die Nutzung erfolgt aber trotzdem auf eigene Gefahr.
+				   Der Author übernimmt keine Haftung für Fehler, die aus der Handhabung bzw. aus einer nicht geeigneten Joomla-Installation herrühren.</p>
+				</div>
+				<div name="en-EN">
+				   <hr>
+				   <span style="color:red;"><strong>Important:</strong></span>
+				   <p style="text-align: justify;">Finally you must enable the plugin manually now. For that go to the <strong>plugin manager</strong><a href="index.php?option=com_plugins&amp;view=plugins"> (use this link)</a>. Enable the plugin, set the accesslevel to <strong>public</strong>. 
+				   Then go to the tabs(standart/extendet) to configure the plugin and at least, <strong>save</strong> the settings.</p>
+				   <span style="color:red;"><strong>Disclaimer:</strong></span>
+				   <p style="text-align: justify;">This software has been programmed to the best knowledge for the CMS Joomla. The data is used but still at your own risk.
+				   The author assumes no liability for errors arising from the handling or from an unsuitable Joomla installation.</p>
+				</div>
+			  </div>        
+			  </td>
+		   </tr>
+		</table>
+	 </div>
+	]]>
+	</description>
+	<scriptfile>install/script.php</scriptfile>
+	<install>
+	<sql/>
+	</install>
+	<uninstall>
+	<sql/>
+	</uninstall>
+	<update>
+	<schemas/>
+	</update>
+	<updateservers>
+	<server name="HGHs UpdateServer - stopHitCounts" type="extension" priority="2">https://moba-hgh.de/updateserver/extensions/updates/plg_stophitcounts.xml</server>
+	</updateservers>
+	<files folder="site">
+	<folder>assets</folder>
+	<folder>install</folder>
+	<folder>language</folder>
+	<folder>models</folder>
+	<filename>index.html</filename>
+	<filename plugin="stophitcounts">stophitcounts.php</filename>
+	<filename>stophitcounts_CHANGELOG.php</filename>
+	</files>
+	<!--
+	<languages folder="language">
+		   
+					these files will be installed in the administrator/language folder.
 					.... to get the preflight-messages .
-            -->
-            <language tag="en-GB">en-GB/en-GB.plg_system_stophitcounts.ini</language>
-            <language tag="en-GB">en-GB/en-GB.plg_system_stophitcounts.sys.ini</language>
-            <language tag="de-DE">de-DE/de-DE.plg_system_stophitcounts.ini</language>
-            <language tag="de-DE">de-DE/de-DE.plg_system_stophitcounts.sys.ini</language>
-       </languages>
-  <media destination="plg_stophitcounts" folder="site/assets">
+			
+			<language tag="en-GB">en-GB/en-GB.plg_system_stophitcounts.ini</language>
+			<language tag="en-GB">en-GB/en-GB.plg_system_stophitcounts.sys.ini</language>
+			<language tag="de-DE">de-DE/de-DE.plg_system_stophitcounts.ini</language>
+			<language tag="de-DE">de-DE/de-DE.plg_system_stophitcounts.sys.ini</language>
+	   </languages>
+	-->
+	<media destination="plg_stophitcounts" folder="site/assets">
 	<folder>images</folder>
-  </media>
-  <params/>
-  <config>
+	</media>
+	<params/>
+	<config>
     <fields name="params">
 		<fieldset  name="basic">
 	      	<field name="" type="spacer" default="" label="PLG_SYSTEM_SHC_BAS_TIPCONF_TXT" description="PLG_SYSTEM_SHC_BAS_TIPCONF_DESC"/>
