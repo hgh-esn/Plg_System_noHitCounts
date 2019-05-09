@@ -4,8 +4,8 @@
  * @subpackage Base
  * @author     Hans-Guenter Heiserholt [HGH] {@link moba-hgh/joomla}
  * @author     Created on 10-Oct-2017
- * @lastUpdate 07-Mai-2019
- * @version    1.2.6
+ * @lastUpdate 09-Mai-2019
+ * @version    1.2.8
  * @license    GNU/GPL
  */
 
@@ -244,7 +244,7 @@ class plgSystemstopHitCounts extends JPlugin
                  
 			$msg = '- decr. hitCounter[art-id/hits]=' .$id .'/' .$hits;
 		 
-			if ( $log_active )
+			if ( $log_active === true )
 			{
 				JLog::add($msg);
 			}
@@ -308,7 +308,8 @@ class plgSystemstopHitCounts extends JPlugin
 			if ( stristr($user_agent, $botarray[$i]) ) 
 			{
 				$msg = $seq .'-Bot-found=' .$botarray[$i];
-				if ( $logparm !== false )
+//				if ( $logparm !== false )
+				if ( $logparm )
 				{
 					JLog::add($user_agent);
 					JLog::add($msg);
