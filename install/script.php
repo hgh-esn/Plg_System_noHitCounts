@@ -34,7 +34,7 @@ class plgsystemstophitcountsInstallerScript
     public function install($parent) 
     {
  //     $parent->getParent()->setRedirectURL('index.php?option=stophitcounts');
-         echo '<p>' .JText::_('stophitcounts_INSTALL_TEXT') . '</p>';
+         echo '<p>' .JText::_('stophitcounts_INSTALL_TEXT') .'</p>';
     }
 
     /**
@@ -46,7 +46,7 @@ class plgsystemstophitcountsInstallerScript
      */
     public function uninstall($parent) 
     {
-			echo 'Uninstall - nothing to do';
+			echo '<br /><p>' .'Uninstall - nothing to do' .'</p>';
     }
 
     /**
@@ -58,7 +58,7 @@ class plgsystemstophitcountsInstallerScript
      */
     public function update($parent) 
     {
-        echo '<p>' . JText::_('stophitcounts_UPDATE_' . $type . ' see notes!') . '</p>';
+        echo '<p>' .JText::_('stophitcounts_UPDATE_' . $type . ' see notes!') .'</p>';
 
 		// aktuelles Verzeichnis
 //      echo '<br />' .'akt. Verzeichnis= ' .getcwd() . "\n";
@@ -70,7 +70,7 @@ class plgsystemstophitcountsInstallerScript
 			$xml = simplexml_load_file($dsn);
 //       	print_r($xml);
 //        	echo '<p>' . JText::sprintf('stophitcounts_UPDATE_TEXT', $parent->get('manifest')->version) . '</p>';
-			echo '<p>' .'Note: Die neue/aktuelle Version des Plugins ist jetzt: <b>' .$xml->version .'</b></p>';
+			echo '<br /><p>' .'Note: Die neue/aktuelle Version des Plugins ist jetzt: <b>' .$xml->version .'</b></p>';
 		} 
 		else
 		{
@@ -93,7 +93,7 @@ class plgsystemstophitcountsInstallerScript
      */
     public function preflight($type, $parent)
     {
-		echo '<p>' . JText::_('stophitcounts_PREFLIGHT_' . $type . ' We do some updates') . '</p>';
+		echo '<br /><p>' .JText::_('stophitcounts_PREFLIGHT_' . $type . ' We do some updates') .'</p>';
 				
 		// Start prefight
 		
@@ -105,16 +105,19 @@ class plgsystemstophitcountsInstallerScript
 		 * this changes have to be done also in the DB to already existing entries
 		 *********************************************************************/
 		$db =JFactory::getDBO();
+		
 		$query = 'SELECT params FROM #__extensions WHERE name LIKE "%stophitcount%"';
 		$db->setQuery($query);
+		
 		$shc_parms_readFromDB =  $db->loadResult();
 		
 		$query = 'SELECT extension_id FROM #__extensions WHERE name LIKE "%stophitcount%"';
 		$db->setQuery($query);
-		$shc_exid =  $db->loadResult();
+		
+		$shc_exid = $db->loadResult();
 
-//					echo '<br />' .$shc_parms_readFromDB;
-//					echo '<br />' .$shc_exid;
+//		echo '<br />' .$shc_parms_readFromDB;
+//		echo '<br />' .$shc_exid;
 
 		// do rename parms
 
@@ -127,31 +130,33 @@ class plgsystemstophitcountsInstallerScript
 
 		if ( $shc_parms !== $shc_parms_readFromDB)
 		{
- 			echo '<br />' 	.'PLG_SYSTEM_SHC_DB_UPDATE_MSG_PARMS_UPD_YES';
-			echo 	JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_PARMS_UPD_YES');
+// 			echo '<br />' 	          .'PLG_SYSTEM_SHC_DB_UPDATE_MSG_PARMS_UPD_YES';
+			echo '<br /><p>' .JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_PARMS_UPD_YES') .'</p>';
+			
  			$query = 'UPDATE #__extensions SET params=' .$shc_parms .' WHERE extension_id=' .$shc_exid;
  			$db->execute();
+			
 			if ( $db->getErrorNum() ) 
 			{
 				$msg = $db->getErrorMsg();
-//				echo  '<br />' 	.'PLG_SYSTEM_SHC_DB_UPDATE_MSG_ERR');
-				echo  	JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_ERR');
-//				echo '<br />' .$msg;
+//				echo  '<br />' 			  .'PLG_SYSTEM_SHC_DB_UPDATE_MSG_ERR');
+				echo  '<br /><p>'.JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_ERR').'</p>';
+//				echo  '<br />' .$msg;
 				{
 					JLog::add($msg);
 				} 
 				return false;
 			}
 			else { 
- 				echo '<br />' .'PLG_SYSTEM_SHC_DB_UPDATE_MSG_OK';
-				echo  JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_OK');
+// 				echo '<br />' 			  .'PLG_SYSTEM_SHC_DB_UPDATE_MSG_OK';
+				echo '<br /><p>' .JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_OK') .'</p>';
 			}
 		}
 		else
 		{
- 			echo '<br />' .'PLG_SYSTEM_SHC_DB_UPDATE_MSG_PARMS_UPD_NO';
-			echo  JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_PARMS_UPD_NO');
-			echo '<hr><p>' .JText::_('stophitcounts_PREFLIGHT_' .$type .' => nothing to do') .'</p>';
+// 			echo '<br />' 			   .'PLG_SYSTEM_SHC_DB_UPDATE_MSG_PARMS_UPD_NO';
+			echo  '<br /><p>' .JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_PARMS_UPD_NO') .'</p>';
+//			echo '<hr><p>' .JText::_('stophitcounts_PREFLIGHT_' .$type .' => nothing to do') .'</p>';
 		}
 		
 		// End prefight test
@@ -171,8 +176,8 @@ class plgsystemstophitcountsInstallerScript
      */
 	function postflight($type, $parent) 
 	{
-		echo '<p>' . JText::_('stophitcounts_POSTFLIGHT_' . $type . ' We do some clean-ups') . '</p>';
-		// echo '<p>' . JText::sprintf('The new version is now: ', $parent->get('manifest')->version) . '</p>';
+		echo '<br /><p>' .JText::_('stophitcounts_POSTFLIGHT_' . $type . ' We do some clean-ups') .'</p>';
+	// 	echo '<p>' 		 .JText::sprintf('The new version is now: ', $parent->get('manifest')->version) . '</p>';
 		  
 		$pfad='../media/2delete'; // for testing
 		  
