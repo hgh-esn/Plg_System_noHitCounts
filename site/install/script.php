@@ -20,8 +20,7 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-// use JFactory;
-// use JText;
+
 class plgsystemstophitcountsInstallerScript
 {
     /**
@@ -33,8 +32,10 @@ class plgsystemstophitcountsInstallerScript
      */
     public function install($parent) 
     {
- //     $parent->getParent()->setRedirectURL('index.php?option=stophitcounts');
-         echo '<p>' .JText::_('stophitcounts_INSTALL_TEXT') .'</p>';
+//      $parent->getParent()->setRedirectURL('index.php?option=stophitcounts');
+//      echo '<br />' .JText::_('stophitcounts_INSTALL_TEXT');
+		echo '<br />' .JText::_('PLG_SYSTEM_SHC_INST_SEE_NOTES');
+
     }
 
     /**
@@ -46,7 +47,8 @@ class plgsystemstophitcountsInstallerScript
      */
     public function uninstall($parent) 
     {
-			echo '<br /><p>' .'Uninstall - nothing to do' .'</p>';
+//		echo '<br />' .'Uninstall - nothing to do';
+		echo '<br />' .JText::_('PLG_SYSTEM_SHC_UNINST_NOTHING_TO_DO');
     }
 
     /**
@@ -58,7 +60,8 @@ class plgsystemstophitcountsInstallerScript
      */
     public function update($parent) 
     {
-        echo '<p>' .JText::_('stophitcounts_UPDATE_' . $type . ' see notes!') .'</p>';
+//      echo '<br />' .JText::_('stophitcounts_UPDATE_' . $type . ' see notes!');
+		echo '<br />' .JText::_('PLG_SYSTEM_SHC_UPD_SEE_NOTES');
 
 		// aktuelles Verzeichnis
 //      echo '<br />' .'akt. Verzeichnis= ' .getcwd() . "\n";
@@ -68,14 +71,20 @@ class plgsystemstophitcountsInstallerScript
 		if (file_exists($dsn))
 		{
 			$xml = simplexml_load_file($dsn);
+// 			print "<pre>";			
 //       	print_r($xml);
-//        	echo '<p>' . JText::sprintf('stophitcounts_UPDATE_TEXT', $parent->get('manifest')->version) . '</p>';
-			echo '<br /><p>' .'Note: Die neue/aktuelle Version des Plugins ist jetzt: <b>' .$xml->version .'</b></p>';
+// 			print "</pre>";
+
+//			echo '<br />' .'Note: Die neue/aktuelle Version des Plugins ist jetzt: <b>' .$xml->version .'</b>';
+			echo '<br />' .JText::_('PLG_SYSTEM_SHC_UPD_NEW_VERSION_IS')  .'<b>' .$xml->version .'</b>';
+
 		} 
 		else
 		{
 			exit('Konnte ' .$dsn .' nicht öffnen.');
-//      	echo 'Konnte ' .$dsn .' nicht öffnen.';
+//      	echo '<br />' .'Konnte ' .$dsn .' nicht öffnen.';
+			echo '<br />' .JText::_('PLG_SYSTEM_SHC_UPD_DSN_NOT_TO_OPEN');
+
 		}     
 	}
 
@@ -93,8 +102,9 @@ class plgsystemstophitcountsInstallerScript
      */
     public function preflight($type, $parent)
     {
-		echo '<br /><p>' .JText::_('stophitcounts_PREFLIGHT_' . $type . ' We do some updates') .'</p>';
-				
+//		echo '<br />' .JText::_('stophitcounts_PREFLIGHT_' . $type . ' We do some updates');
+		echo '<br />' .JText::_('PLG_SYSTEM_SHC_DB_UPD_PARAMS');
+
 		// Start prefight
 		
 		/*********************************************************************
@@ -109,7 +119,7 @@ class plgsystemstophitcountsInstallerScript
 		$query = 'SELECT params FROM #__extensions WHERE name LIKE "%stophitcount%"';
 		$db->setQuery($query);
 		
-		$shc_parms_readFromDB =  $db->loadResult();
+		$shc_parms_readFromDB = $db->loadResult();
 		
 		$query = 'SELECT extension_id FROM #__extensions WHERE name LIKE "%stophitcount%"';
 		$db->setQuery($query);
@@ -120,18 +130,37 @@ class plgsystemstophitcountsInstallerScript
 //		echo '<br />' .$shc_exid;
 
 		// do rename parms
-
-		$shc_parms = str_ireplace('disable_users','disabled_users',$shc_parms_readFromDB,$cnt);
-//		echo '<br /> count rename - disable_/disabled_users : change-counts  =' .$cnt;
-		$shc_parms = str_ireplace('disable_groups','disabled_groups',$shc_parms,$cnt);
-//		echo '<br /> count rename - disable_/disabled_groups: change-counts =' .$cnt;
-
+		//
+		// change the disabled_users & disabled_groups params : since V1.2.5
+		// 
+			$shc_parms = str_ireplace('disable_users','disabled_users',$shc_parms_readFromDB,$cnt);
+			if ($cnt > 0 )
+			{
+//				echo '<br /> count rename - disable_/disabled_users : change-counts  =' .$cnt;
+				echo '<br />' .JText::_('PLG_SYSTEM_SHC_DB_UPD_PARAMS_DISABLE_USERS_CHG');
+			}
+			$shc_parms = str_ireplace('disable_groups','disabled_groups',$shc_parms,$cnt);
+			if ($cnt > 0 )
+			{
+//				echo '<br /> count rename - disable_/disabled_groups: change-counts =' .$cnt;
+				echo '<br />' .JText::_('PLG_SYSTEM_SHC_DB_UPD_PARAMS_DISABLE_GROUPS_CHG');
+			}
+		//
+		// change the default pov-params : since V1.2.9
+		// 
+			$shc_parms = str_ireplace('"qookie_pov":"3600"','"qookie_pov":"86400"',$shc_parms,$cnt);
+			if ($cnt > 0 )
+			{
+//				echo '<br /> qookie_pov: changed DEFAULT from "1h-3600" to "24h-86400"';
+				echo '<br />' .JText::_('PLG_SYSTEM_SHC_DB_UPD_PARAMS_POV_DEFAULT_CHG');
+			}
+			
 //		echo '<br />' .$shc_parms;
 
 		if ( $shc_parms !== $shc_parms_readFromDB)
 		{
-// 			echo '<br />' 	          .'PLG_SYSTEM_SHC_DB_UPDATE_MSG_PARMS_UPD_YES';
-			echo '<br /><p>' .JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_PARMS_UPD_YES') .'</p>';
+// 			echo '<br />'          .'PLG_SYSTEM_SHC_DB_UPD_PARAMS_YES';
+			echo '<br />' .JText::_('PLG_SYSTEM_SHC_DB_UPD_PARAMS_YES');
 			
  			$query = 'UPDATE #__extensions SET params=' .$shc_parms .' WHERE extension_id=' .$shc_exid;
  			$db->execute();
@@ -139,8 +168,8 @@ class plgsystemstophitcountsInstallerScript
 			if ( $db->getErrorNum() ) 
 			{
 				$msg = $db->getErrorMsg();
-//				echo  '<br />' 			  .'PLG_SYSTEM_SHC_DB_UPDATE_MSG_ERR');
-				echo  '<br /><p>'.JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_ERR').'</p>';
+//				echo  '<br />' 		   .'PLG_SYSTEM_SHC_DB_UPD_ERR';
+				echo  '<br />'.JText::_('PLG_SYSTEM_SHC_DB_UPD_ERR');
 //				echo  '<br />' .$msg;
 				{
 					JLog::add($msg);
@@ -148,15 +177,14 @@ class plgsystemstophitcountsInstallerScript
 				return false;
 			}
 			else { 
-// 				echo '<br />' 			  .'PLG_SYSTEM_SHC_DB_UPDATE_MSG_OK';
-				echo '<br /><p>' .JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_OK') .'</p>';
+// 				echo '<br />' 		   .'PLG_SYSTEM_SHC_DB_UPD_OK';
+				echo '<br />' .JText::_('PLG_SYSTEM_SHC_DB_UPD_OK');
 			}
 		}
 		else
 		{
-// 			echo '<br />' 			   .'PLG_SYSTEM_SHC_DB_UPDATE_MSG_PARMS_UPD_NO';
-			echo  '<br /><p>' .JText::_('PLG_SYSTEM_SHC_DB_UPDATE_MSG_PARMS_UPD_NO') .'</p>';
-//			echo '<hr><p>' .JText::_('stophitcounts_PREFLIGHT_' .$type .' => nothing to do') .'</p>';
+// 			echo '<br />' 		   .'PLG_SYSTEM_SHC_DB_UPD_PARAMS_NO';
+			echo '<br />' .JText::_('PLG_SYSTEM_SHC_DB_UPD_PARAMS_NO');
 		}
 		
 		// End prefight test
@@ -176,8 +204,9 @@ class plgsystemstophitcountsInstallerScript
      */
 	function postflight($type, $parent) 
 	{
-		echo '<br /><p>' .JText::_('stophitcounts_POSTFLIGHT_' . $type . ' We do some clean-ups') .'</p>';
-	// 	echo '<p>' 		 .JText::sprintf('The new version is now: ', $parent->get('manifest')->version) . '</p>';
+		echo '<br />' .JText::_('stophitcounts_POSTFLIGHT_' . $type . ' We do some clean-ups');
+		echo '<br />' .JText::_('PLG_SYSTEM_SHC_POSTFLIGHT_CLEANUP');
+	// 	echo '' 		 .JText::sprintf('The new version is now: ', $parent->get('manifest')->version);
 		  
 		$pfad='../media/2delete'; // for testing
 		  
@@ -205,15 +234,19 @@ class plgsystemstophitcountsInstallerScript
 					reset($objects);
 					rmdir($dir);
 				}
-			 }
-			 rrmdir($pfad);       
-	//       echo 'Pfad: ' .$pfad .' gelöscht.';
-			 echo 'clean-up for ' .$pfad .' done.';
+			}
+			rrmdir($pfad);       
+	//      echo 'Pfad: ' .$pfad .' gelöscht.';
+			echo '<br />' .'clean-up done for ' .$pfad;
+			echo '<br />' .JText::_('PLG_SYSTEM_SHC_POSTFLIGHT_CLEANUP_DONE');
+
 		}
 		  else
 		{
 	//      echo 'Pfad: ' .$pfad .' nicht gefunden';
-			echo 'nothing to do! ;)';       
+			echo '<br />' .JText::_('PLG_SYSTEM_SHC_POSTFLIGHT_CLEANUP_PATH_NOT_EXISTS');
+			echo '<br />' .'nothing to do!';       
+			echo '<br />' .JText::_('PLG_SYSTEM_SHC_POSTFLIGHT_CLEANUP_NOTHING_TO_DO');
 		}
 	}	
 } // end-class
