@@ -4,8 +4,8 @@
  * @subpackage Base
  * @author     Hans-Guenter Heiserholt [HGH] {@link moba-hgh/joomla}
  * @author     Created on 10-Oct-2017
- * @lastUpdate 09-Mai-2019
- * @version    1.2.8
+ * @lastUpdate 13-Mai-2019
+ * @version    1.2.9
  * @license    GNU/GPL
  */
 
@@ -65,17 +65,15 @@ class plgSystemstopHitCounts extends JPlugin
 			$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'unknown';
 		 
 		 // we call "checkBot" it returns true or false
-		 
 			if ( $this->checkBot($user_agent) !== false )
 			{        
-				$msg = '[Bot]user - decr. hitCounter.';
-
-				$this->decrHitCounter($this->params->get('log_active'),$article->id,$article->hits);
+				// the bot hasn't already set the hitCounter - we don't decrement
+				$msg = '[Bot]user - noHitCount for artid/hits=' .$article->id .'/' .$article->hits;
 			 
-				if ( $this->params->get('log_active') )
-				{
-	//				JLog::add($msg);  // set message already in checkbot !
-				}
+ 				if ( $this->params->get('log_active') )
+ 				{
+ 					JLog::add($msg);
+ 				}
 				return;
 			}               
 		}
@@ -155,9 +153,10 @@ class plgSystemstopHitCounts extends JPlugin
 				}
 				else 
 				{					
+					$msg = '[public/registrated]user - noHitcount because of reloading article[' .$article->id .'].';
+
 					$this->decrHitCounter($this->params->get('log_active'),$article->id,$article->hits);
 					
-					$msg = '[public/registrated]user - noHitcount because of reloading article[' .$article->id .'].';
 					if ( $this->params->get('log_active') )
 					{
 						JLog::add($msg);
@@ -178,7 +177,7 @@ class plgSystemstopHitCounts extends JPlugin
 		if ( $context != 'com_content.article' )
 		{
 			/* no correction of hitCounter, because joomla hasn't already count itself.*/
-			$msg = 'no counting in non-article areas';
+			$msg = date('H:i:s', time()) .' - no counting in non-article areas for area/article/hits - ' .$context .'/' .$article->id .'/' .$article->hits;
 
 			if ( $this->params->get('log_active') )
 			{
@@ -195,7 +194,7 @@ class plgSystemstopHitCounts extends JPlugin
 			if ( $context  == 'com_content.article' && $user->id == $article->created_by )
 			{
 				$msg = 'loggedIn-user=' .$user->id .' matched >created_by< [' .$article->id .'] - no counting.';
-              
+
 				if ( $this->params->get('log_active') )
 				{
                   JLog::add($msg);
@@ -208,8 +207,7 @@ class plgSystemstopHitCounts extends JPlugin
 			//	else /* do nothing */
 				return;      
 			}
-		} 
-       
+		}     
 	}// end-function onContentBeforeDisplay
 
 	/**
@@ -222,6 +220,7 @@ class plgSystemstopHitCounts extends JPlugin
      */
     
 	private function decrHitCounter($log_active,$id,$hits)
+//	public function decrHitCounter($log_active,$id,$hits)
 	{
 		if ( $hits > 0 )
 		{       
@@ -234,25 +233,30 @@ class plgSystemstopHitCounts extends JPlugin
 
 			if ( $db->getErrorNum() ) 
 			{
-				$msg = $db->getErrorMsg();           
+				$msg = $db->getErrorMsg();
+
 				if ( $log_active )
 				{
 					JLog::add($msg);
 				} 
 				return false;
 			}
-                 
-			$msg = '- decr. hitCounter[art-id/hits]=' .$id .'/' .$hits;
-		 
-			if ( $log_active === true )
+			
+            $article->hits = $hits-1;
+			
+			$msg = 'decrHitCounter - [art-id/hits]=' .$id .'/' .$article->hits;
+			
+			if ( $log_active )
 			{
 				JLog::add($msg);
 			}
+
 			return true;
 		}
 		else
 		{         
-			$msg = 'no decm. hitCounter, because of ZERO hits in article/hits] =' .$id .'/'.$hits;
+			$msg = 'decrHitCounter - no decm. hitCounter, because of ZERO hits in article/hits] =' .$id .'/'.$hits;
+
 			if ( $log_active )
 			{
 				JLog::add($msg);
@@ -260,7 +264,7 @@ class plgSystemstopHitCounts extends JPlugin
 			return false;
 		}
 	}
-   
+	
 	private function logHitCounter($log_active,$id,$nr)
 	{
 		// for testing only 
@@ -273,7 +277,7 @@ class plgSystemstopHitCounts extends JPlugin
 		if ( $db->getErrorNum() ) 
 		{
 			$msg = $db->getErrorMsg();
-         
+
 			if ( $log_active )
 			{
 				JLog::add($msg);
@@ -282,7 +286,7 @@ class plgSystemstopHitCounts extends JPlugin
 		}
       		
 		$msg = '- db-logHitCounter[id/hits] = ' .$id .'/' .$hits .'[ ' .$nr .']';
-		
+
 		if ( $log_active )
 		{
 			JLog::add($msg);
@@ -296,7 +300,7 @@ class plgSystemstopHitCounts extends JPlugin
      * @access private
      * @param $user_agent string The user agent data
      * @return bool 
-	 * 		true  if 	match -> is bot 
+	 * 		true  if 	match -> is  a bot 
 	 * 		false if no match -> not a bot
      * @since 1.0.0
      ************************************************/
@@ -308,7 +312,7 @@ class plgSystemstopHitCounts extends JPlugin
 			if ( stristr($user_agent, $botarray[$i]) ) 
 			{
 				$msg = $seq .'-Bot-found=' .$botarray[$i];
-//				if ( $logparm !== false )
+
 				if ( $logparm )
 				{
 					JLog::add($user_agent);
@@ -322,6 +326,8 @@ class plgSystemstopHitCounts extends JPlugin
 
 	private function checkBot($user_agent)
 	{
+	 	$ret = false;
+		
 		/****************************************************************************************** 
 		 * for user_agent details see:
 		 * https://github.com/monperrus/crawler-user-agents/blob/master/crawler-user-agents.json
@@ -337,15 +343,17 @@ class plgSystemstopHitCounts extends JPlugin
 		 * first check for most used bots - to get best performance
 		 * if nothing found, check for other bots by details
 		 ***************************************************/
-		 
 		$ret = self::CheckBotDetails( $checkbotsfirst, $user_agent,'#',$this->params->get('log_active') );  // returns 'false' or 'true'
 
-		if ($ret !== false) return true;
+//		if ($ret !== false)   // could reset hitcounts
+		if ($ret != false) 
+		{
+			return true;
+		}
 		
 		/***********************************************************
-		 * get the comma-seperated custom bots string 
-		 * from the plugin configuration and put them 
-		 * into a table
+		 * get the comma-seperated custom bots string from the 
+		 * plugin configuration and put them into a table
          **********************************************************/
 		$custom_bots = explode(',', $this->params->get('custom_bots'));
 
@@ -415,9 +423,9 @@ class plgSystemstopHitCounts extends JPlugin
 		'YahooSeeker-Testing','YandexBot','YandexImages','YandexMetrika','Yasaklibot','Yeti','YodaoBot','yoogliFetchAgent',
 		'YoudaoBot','Zao','Zealbot','zspider','ZyBorg');
 		
-		/****************************************
-		 * Merge the arrays for bots, bots1 
-		 ****************************************/
+		/*******************************************
+		 * Merge the arrays bots, bots1 giving bots
+		 *******************************************/
 			$bots = array_map('strtolower', array_unique(array_merge($bots, $bots1)));
 			natcasesort($bots);
 			
@@ -436,8 +444,8 @@ class plgSystemstopHitCounts extends JPlugin
 	
 		return $ret;
 	} // end-function
-
 } // end-class
+
 /* 
  * Helper for logging
  * @package    Notes
