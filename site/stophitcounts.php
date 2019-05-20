@@ -4,8 +4,8 @@
  * @subpackage Base
  * @author     Hans-Guenter Heiserholt [HGH] {@link moba-hgh/joomla}
  * @author     Created on 10-Oct-2017
- * @lastUpdate 13-Mai-2019
- * @version    1.2.9
+ * @lastUpdate 20-Mai-2019
+ * @version    1.2.10
  * @license    GNU/GPL
  */
 
