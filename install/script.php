@@ -162,6 +162,7 @@ class plgsystemstophitcountsInstallerScript
 // 			echo '<br />'          .'PLG_SYSTEM_SHC_DB_UPD_PARAMS_YES';
 			echo '<br />' .JText::_('PLG_SYSTEM_SHC_DB_UPD_PARAMS_YES');
 			
+			$db =JFactory::getDBO();
  			$query = 'UPDATE #__extensions SET params=' .$shc_parms .' WHERE extension_id=' .$shc_exid;
  			$db->execute();
 			
