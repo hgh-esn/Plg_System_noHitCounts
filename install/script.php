@@ -123,11 +123,32 @@ class plgsystemstophitcountsInstallerScript
 		
 		$query = 'SELECT extension_id FROM #__extensions WHERE name LIKE "%stophitcount%"';
 		$db->setQuery($query);
+		if ( $db->getErrorNum() ) 
+			{
+				$msg = $db->getErrorMsg();
+ 				echo  '<br />' 		   .'db-query no entry found - return';
+//				echo  '<br />'.JText::_('PLG_SYSTEM_SHC_DB_UPD_ERR');
+ 				echo  '<br />' .$msg;
+				{
+					JLog::add($msg);
+				} 
+			}
 		
 		$shc_exid = $db->loadResult();
-
-//		echo '<br />' .$shc_parms_readFromDB;
-//		echo '<br />' .$shc_exid;
+		
+  		echo '<br /> readFromDb= ' .$shc_parms_readFromDB;
+  		echo '<br /> exid= ' .$shc_exid;
+		if ( $db->getErrorNum() ) 
+			{
+				$msg = $db->getErrorMsg();
+ 				echo  '<br />' 		   .'no entry found - return';
+//				echo  '<br />'.JText::_('PLG_SYSTEM_SHC_DB_UPD_ERR');
+ 				echo  '<br />' .$msg;
+				{
+					JLog::add($msg);
+				} 
+				return false;
+			}
 
 		// do rename parms
 		//
@@ -162,9 +183,21 @@ class plgsystemstophitcountsInstallerScript
 // 			echo '<br />'          .'PLG_SYSTEM_SHC_DB_UPD_PARAMS_YES';
 			echo '<br />' .JText::_('PLG_SYSTEM_SHC_DB_UPD_PARAMS_YES');
 			
+			$db = JFactory::getDBO();
  			$query = 'UPDATE #__extensions SET params=' .$shc_parms .' WHERE extension_id=' .$shc_exid;
- 			$db->execute();
+//			$db->setQuery($query);
+			$res = $db->execute();
+/*
+			$query = $db->getQuery(true);
 			
+			$fields = array( $db->quoteName('shc_parms')	);
+			$conditions = array( $db->quoteName('extension_id') . ' = ' . $db->quote('$shc_exid') );
+			
+			$query->update($db->quoteName('#__extensions'))->set($fields)->where($conditions);
+
+			$db->setQuery($query);
+			$res = $db->execute();
+*/			
 			if ( $db->getErrorNum() ) 
 			{
 				$msg = $db->getErrorMsg();
