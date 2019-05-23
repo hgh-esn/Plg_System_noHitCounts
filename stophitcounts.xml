@@ -92,11 +92,9 @@
 	<languages folder="admin">
 <!--
 					these files will be installed in the administrator/language folder.
-					.... to get the preflight-messages.
+					.... to get the pre-/proflight-messages.
 -->
-			<language tag="en-GB">en-GB/en-GB.plg_system_stophitcounts.ini</language>
 			<language tag="en-GB">en-GB/en-GB.plg_system_stophitcounts.sys.ini</language>
-			<language tag="de-DE">de-DE/de-DE.plg_system_stophitcounts.ini</language>
 			<language tag="de-DE">de-DE/de-DE.plg_system_stophitcounts.sys.ini</language>
 	</languages>
 	<media destination="plg_stophitcounts" folder="site/assets">
