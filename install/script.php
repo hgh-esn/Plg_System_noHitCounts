@@ -126,12 +126,12 @@ class plgsystemstophitcountsInstallerScript
 		$db->setQuery($query);
  		$shc_parms_readFromDB = $db->loadResult();
 		
-		if ( $db->getErrorNum() ) 
-		{
- 			echo  '<br />' 	.'db-query: db-error - return';
- 			echo  '<br />' 	.$db->getErrorNum();
-			return;				
-		}
+//		if ( $db->getErrorNum() ) 
+//		{
+// 			echo  '<br />' 	.'db-query: db-error - return';
+// 			echo  '<br />' 	.$db->getErrorNum();
+//			return;				
+//		}
 		if ( empty($shc_parms_readFromDB ) ) 
 		{
 			// we are on an initial installation 
