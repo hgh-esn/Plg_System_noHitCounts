@@ -24,15 +24,15 @@
 				   <img src="../media/plg_stophitcounts/images/j4-svg.jpg"     alt="Joomla 4.x Series" height="20" style="margin-right: 5px; float: left" width="75" />
 				   <br /><br />
 				   <div>
-					   <img src="../media/plg_stophitcounts/images/DE.gif" style="margin-right: 5px; float: left" width="30" alt="de.gif" title="Deutsch" />           
-					   <p style="text-align: justify;">Wenn sie das Plugin nutzen, hinterlassen sie bitte ein Bewertung und einen Kommentar im  
+					   <img src="../media/plg_stophitcounts/images/DE.gif" style="margin-right: 5px; float: left" width="30" alt="de.gif" title="Deutsch" />
+					   <p style="text-align: justify;">Wenn sie das Plugin nutzen, hinterlassen sie bitte ein Bewertung und einen Kommentar im
 					   <a href="https://extensions.joomla.org/extensions/extension/structure-a-navigation/site-navigation/stophitcounts/" target="_blank" rel="noreferrer">Joomla! Extensions Directory.</a>
 					   Danke dafür.</p>
 				   </div>
 				   <div>
 					   <img src="../media/plg_stophitcounts/images/gb.gif" style="margin-right: 5px; float: left" width="30" alt="gb.gif" title="English-GB" />
 					   <img src="../media/plg_stophitcounts/images/us.gif" style="margin-right: 5px; float: left" width="30" alt="us.gif" title="English-US" />
-					   <p style="text-align: justify;">If you use the plugin, please post a rating and a comment at the 
+					   <p style="text-align: justify;">If you use the plugin, please post a rating and a comment at the
 					   <a href="https://extensions.joomla.org/extensions/extension/structure-a-navigation/site-navigation/stophitcounts/" target="_blank" rel="noreferrer">Joomla! Extensions Directory.</a>
 					   Thank you for that.</p>
 				   </div>
@@ -54,13 +54,13 @@
 				<div name="en-EN">
 				   <hr>
 				   <span style="color:red;"><strong>Important:</strong></span>
-				   <p style="text-align: justify;">Finally you must enable the plugin manually now. For that go to the <strong>plugin manager</strong><a href="index.php?option=com_plugins&amp;view=plugins&amp;filter_client_id=1&amp;filter_plugin=plg_stophitcounts" target="_blank" rel="noreferrer"> (use this link)</a>. Enable the plugin, set the accesslevel to <strong>public</strong>. 
+				   <p style="text-align: justify;">Finally you must enable the plugin manually now. For that go to the <strong>plugin manager</strong><a href="index.php?option=com_plugins&amp;view=plugins&amp;filter_client_id=1&amp;filter_plugin=plg_stophitcounts" target="_blank" rel="noreferrer"> (use this link)</a>. Enable the plugin, set the accesslevel to <strong>public</strong>.
 				   Then go to the tabs(standart/extendet) to configure the plugin and at least, <strong>save</strong> the settings.</p>
 				   <span style="color:red;"><strong>Disclaimer:</strong></span>
 				   <p style="text-align: justify;">This software has been programmed to the best knowledge for the CMS Joomla. The data is used but still at your own risk.
 				   The author assumes no liability for errors arising from the handling or from an unsuitable Joomla installation.</p>
 				</div>
-			  </div>        
+			  </div>
 			  </td>
 		   </tr>
 		</table>
@@ -89,6 +89,16 @@
 	<filename plugin="stophitcounts">stophitcounts.php</filename>
 	<filename>stophitcounts_CHANGELOG.php</filename>
 	</files>
+	<languages folder="admin">
+<!--
+					these files will be installed in the administrator/language folder.
+					.... to get the preflight-messages.
+-->
+			<language tag="en-GB">en-GB/en-GB.plg_system_stophitcounts.ini</language>
+			<language tag="en-GB">en-GB/en-GB.plg_system_stophitcounts.sys.ini</language>
+			<language tag="de-DE">de-DE/de-DE.plg_system_stophitcounts.ini</language>
+			<language tag="de-DE">de-DE/de-DE.plg_system_stophitcounts.sys.ini</language>
+	</languages>
 	<media destination="plg_stophitcounts" folder="site/assets">
 	<folder>images</folder>
 	</media>
@@ -145,7 +155,7 @@
 					key_field="id"
 					value_field="name"
 				>
-			</field>			
+			</field>
 			<field 	name="disabled_groups"
 					type="usergrouplist"
 					multiple="true"
@@ -153,7 +163,7 @@
 					label="PLG_SYSTEM_SHC_DISABLE_GROUP_HIT_COUNT_LABEL_TXT"
 					description="PLG_SYSTEM_SHC_DISABLE_GROUP_HIT_COUNT_LABEL_DESC"
 				>
-			</field>						
+			</field>
 			<field  name="disable_bots"
 					type="radio"
 					class="switcher"
