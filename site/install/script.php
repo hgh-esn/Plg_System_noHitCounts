@@ -122,6 +122,7 @@ class plgsystemstophitcountsInstallerScript
 	//  qn = 'quotename'
 		$query->select($query->qn('params'))
 			  ->from($query->qn('#__extensions'))
++
 			  ->where($query->qn('name') . 'LIKE "%stophitcount%"');
 		$db->setQuery($query);
  		$shc_parms_readFromDB = $db->loadResult();
@@ -133,6 +134,18 @@ class plgsystemstophitcountsInstallerScript
 //			return;				
 //		}
 //
++
+			  ->where($query->qn('name') . 'LIKE %stophitcount%');
+		$db->setQuery($query);
+ 		$shc_parms_readFromDB = $db->loadResult();
+		
+		if ( $db->getErrorNum() ) 
+		{
+ 			echo  '<br />' 	.'db-query: db-error - return';
+ 			echo  '<br />' 	.$db->getErrorNum();
+			return;				
+		}
++
 		if ( empty($shc_parms_readFromDB ) ) 
 		{
 			// we are on an initial installation 
