@@ -122,7 +122,7 @@ class plgsystemstophitcountsInstallerScript
 	//  qn = 'quotename'
 		$query->select($query->qn('params'))
 			  ->from($query->qn('#__extensions'))
-			  ->where($query->qn('name') . 'LIKE %stophitcount%');
+			  ->where($query->qn('name') . 'LIKE "%stophitcount%"');
 		$db->setQuery($query);
  		$shc_parms_readFromDB = $db->loadResult();
 		
