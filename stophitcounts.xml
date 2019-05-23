@@ -95,6 +95,7 @@
 					.... to get the pre-/proflight-messages.
 -->
 			<language tag="en-GB">en-GB/en-GB.plg_system_stophitcounts.sys.ini</language>
+
 			<language tag="de-DE">de-DE/de-DE.plg_system_stophitcounts.sys.ini</language>
 	</languages>
 	<media destination="plg_stophitcounts" folder="site/assets">
