@@ -114,112 +114,36 @@ class plgsystemstophitcountsInstallerScript
 		 * disable_groups -> disabled_groups
 		 * this changes have to be done also in the DB to already existing entries
 		 *********************************************************************/
-		$db =JFactory::getDBO();
+		$db =& JFactory::getDBO();
 		
-		$query = 'SELECT params FROM #__extensions WHERE name LIKE "%stophitcount%"';
+		$query = $db->getQuery(true);
+//		$query = 'SELECT params FROM #__extensions WHERE name LIKE "%stophitcount%"';
+
+	//  qn = 'quotename'
+		$query->select($query->qn('params'))
+			  ->from($query->qn('#__extensions'))
+			  ->where($query->qn('name') . 'LIKE %stophitcount%');
 		$db->setQuery($query);
+ 		$shc_parms_readFromDB = $db->loadResult();
 		
-		$shc_parms_readFromDB = $db->loadResult();
-		
-		$query = 'SELECT extension_id FROM #__extensions WHERE name LIKE "%stophitcount%"';
-		$db->setQuery($query);
 		if ( $db->getErrorNum() ) 
-			{
-				$msg = $db->getErrorMsg();
- 				echo  '<br />' 		   .'db-query no entry found - return';
-//				echo  '<br />'.JText::_('PLG_SYSTEM_SHC_DB_UPD_ERR');
- 				echo  '<br />' .$msg;
-				{
-					JLog::add($msg);
-				} 
-			}
-		
-		$shc_exid = $db->loadResult();
-		
-  		echo '<br /> readFromDb= ' .$shc_parms_readFromDB;
-  		echo '<br /> exid= ' .$shc_exid;
-		if ( $db->getErrorNum() ) 
-			{
-				$msg = $db->getErrorMsg();
- 				echo  '<br />' 		   .'no entry found - return';
-//				echo  '<br />'.JText::_('PLG_SYSTEM_SHC_DB_UPD_ERR');
- 				echo  '<br />' .$msg;
-				{
-					JLog::add($msg);
-				} 
-				return false;
-			}
-
-		// do rename parms
-		//
-		// change the disabled_users & disabled_groups params : since V1.2.5
-		// 
-			$shc_parms = str_ireplace('disable_users','disabled_users',$shc_parms_readFromDB,$cnt);
-			if ($cnt > 0 )
-			{
-//				echo '<br /> count rename - disable_/disabled_users : change-counts  =' .$cnt;
-				echo '<br />' .JText::_('PLG_SYSTEM_SHC_DB_UPD_PARAMS_DISABLE_USERS_CHG');
-			}
-			$shc_parms = str_ireplace('disable_groups','disabled_groups',$shc_parms,$cnt);
-			if ($cnt > 0 )
-			{
-//				echo '<br /> count rename - disable_/disabled_groups: change-counts =' .$cnt;
-				echo '<br />' .JText::_('PLG_SYSTEM_SHC_DB_UPD_PARAMS_DISABLE_GROUPS_CHG');
-			}
-		//
-		// change the default pov-params : since V1.2.9
-		// 
-			$shc_parms = str_ireplace('"qookie_pov":"3600"','"qookie_pov":"86400"',$shc_parms,$cnt);
-			if ($cnt > 0 )
-			{
-//				echo '<br /> qookie_pov: changed DEFAULT from "1h-3600" to "24h-86400"';
-				echo '<br />' .JText::_('PLG_SYSTEM_SHC_DB_UPD_PARAMS_POV_DEFAULT_CHG');
-			}
-			
-//		echo '<br />' .$shc_parms;
-
-		if ( $shc_parms !== $shc_parms_readFromDB)
 		{
-// 			echo '<br />'          .'PLG_SYSTEM_SHC_DB_UPD_PARAMS_YES';
-			echo '<br />' .JText::_('PLG_SYSTEM_SHC_DB_UPD_PARAMS_YES');
-			
-			$db = JFactory::getDBO();
- 			$query = 'UPDATE #__extensions SET params=' .$shc_parms .' WHERE extension_id=' .$shc_exid;
-//			$db->setQuery($query);
-			$res = $db->execute();
-/*
-			$query = $db->getQuery(true);
-			
-			$fields = array( $db->quoteName('shc_parms')	);
-			$conditions = array( $db->quoteName('extension_id') . ' = ' . $db->quote('$shc_exid') );
-			
-			$query->update($db->quoteName('#__extensions'))->set($fields)->where($conditions);
-
-			$db->setQuery($query);
-			$res = $db->execute();
-*/			
-			if ( $db->getErrorNum() ) 
-			{
-				$msg = $db->getErrorMsg();
-//				echo  '<br />' 		   .'PLG_SYSTEM_SHC_DB_UPD_ERR';
-				echo  '<br />'.JText::_('PLG_SYSTEM_SHC_DB_UPD_ERR');
-//				echo  '<br />' .$msg;
-				{
-					JLog::add($msg);
-				} 
-				return false;
-			}
-			else { 
-// 				echo '<br />' 		   .'PLG_SYSTEM_SHC_DB_UPD_OK';
-				echo '<br />' .JText::_('PLG_SYSTEM_SHC_DB_UPD_OK');
-			}
+ 			echo  '<br />' 	.'db-query: db-error - return';
+ 			echo  '<br />' 	.$db->getErrorNum();
+			return;				
 		}
-		else
+		if ( empty($shc_parms_readFromDB ) ) 
 		{
-// 			echo '<br />' 		   .'PLG_SYSTEM_SHC_DB_UPD_PARAMS_NO';
-			echo '<br />' .JText::_('PLG_SYSTEM_SHC_DB_UPD_PARAMS_NO');
+			// we are on an initial installation 
+			echo  '<br />' .'no params-entry found - nothing further to do ... return';
+			echo  '<br />' .'$shc_parms_readFromDB= ' .$shc_parms_readFromDB;
+			return;
 		}
-		
+		else 
+		{
+			echo  '<br />' 	.'params-entry found - do further operations';
+			echo  '<br />' .'$shc_parms_readFromDB= ' .$shc_parms_readFromDB;
+		}
 		// End prefight test
 
 	}
