@@ -4,10 +4,10 @@
 	<creationDate>2019-05-23</creationDate>
 	<author>Hans-Guenter Heiserholt [HGH]</author>
 	<authorEmail>hgh-esn@t-online.de</authorEmail>
-	<authorUrl>moba-hgh/joomla</authorUrl>
+	<authorUrl>https://moba-hgh.de/joomla</authorUrl>
 	<copyright>JED-HGH | Joomla Extension Development by HGH</copyright>
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-	<version>1.3.0-alpha3</version>
+	<version>1.3.0-alpha1</version>
 	<description>Unterdrückt das Weiterzählen des Artikel-Zugriffzählers für Bots, bestimmte Benutzer und/oder Rechtegruppen.
 	<![CDATA[
 	   <hr />
@@ -87,18 +87,6 @@
 	<folder>models</folder>
 	<filename>index.html</filename>
 	<filename plugin="stophitcounts">stophitcounts.php</filename>
-	<filename>stophitcounts_CHANGELOG.php</filename>
-	</files>
-	<languages folder="admin">
-<!--
-					these files will be installed in the administrator/language folder.
-					.... to get the preflight-messages.
--->
-			<language tag="en-GB">en-GB/en-GB.plg_system_stophitcounts.ini</language>
-			<language tag="en-GB">en-GB/en-GB.plg_system_stophitcounts.sys.ini</language>
-			<language tag="de-DE">de-DE/de-DE.plg_system_stophitcounts.ini</language>
-			<language tag="de-DE">de-DE/de-DE.plg_system_stophitcounts.sys.ini</language>
-	</languages>
 	<media destination="plg_stophitcounts" folder="site/assets">
 	<folder>images</folder>
 	</media>
@@ -174,6 +162,14 @@
 				<option value="0">JNO</option>
 				<option value="1">JYES</option>
 			</field>
+	  		<field  name=""
+					type="spacer"
+					default=""
+					label="PLG_SYSTEM_SHC_DISABLE_BOTS_DOKU_TXT"
+					description="PLG_SYSTEM_SHC_DISABLE_BOTS_DOKU_DESC"
+					showon="disable_bots:1"
+				>
+			</field>			
 			<field  name="custom_bots"
 					type="textarea"
 					class="span6"
@@ -181,6 +177,7 @@
 					rows="6"
 					label="PLG_SYSTEM_SHC_CUSTOM_BOTS_TXT"
 					description="PLG_SYSTEM_SHC_CUSTOM_BOTS_DESC"
+					showon="disable_bots:1"
 				>
 			</field>
 		</fieldset>
