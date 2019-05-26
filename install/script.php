@@ -221,7 +221,7 @@ class plgsystemstophitcountsInstallerScript
  				$db =& JFactory::getDBO();
 				$query->clear();
 
-// 				$query = 'UPDATE #__extensions SET params=' .$shc_parms .'WHERE extension_id=' .$shc_exid;
+// 				$query = '"UPDATE #__extensions SET params" ."="  ."'" .$shc_parms ."'" ."WHERE extension_id" ."=" .$shc_exid ."'";
 
   				$query->update( $query->qn('#__extensions') )
   					  ->set   ( $query->qn('params') ."=" ."'" .$shc_parms ."'" )
