@@ -4,8 +4,8 @@
  * @subpackage Base
  * @author     Hans-Guenter Heiserholt [HGH] {@link moba-hgh/joomla}
  * @author     Created on 10-Oct-2017
- * @lastUpdate 21-Mai-2019
- * @version    1.3.0
+ * @lastUpdate 20-Mai-2019
+ * @version    1.2.10
  * @license    GNU/GPL
  */
 
@@ -133,19 +133,18 @@ class plgSystemstopHitCounts extends JPlugin
 		/**************************************************
 		 * Check if public / registrated-user updates article
 		 **************************************************/       
-		if 	( $context  == 'com_content.article' AND
-				  ( 		$user->groups[2] == 2    /* registrated */
-				      ||	$user->groups[0] == 9    /* public   ?  */
-				      ||	$user->id 	 == 0	 /* public      */
-				   )
-			  )
+		if 	( $context  == 'com_content.article' AND 
+				( 		$user->groups[2] == 2   /* registrated */ 
+					||	$user->id 	 	 == 0	/* public      */
+				)
+			)   
 		{
-			$sep  	= ',';							// separator
+			$sep  	= ',';							// separator  
 			$name 	= 'HitCnt-Qookie';
-			$pov 	  = $this->params->get('qookie_pov');	// period of validity for qookie
+			$pov 	= $this->params->get('qookie_pov');	// period of validity for qookie
 			$artEntry = $article->id .$sep;
-
-			if ( isset($_COOKIE[$name]) )   // qookie exists ?
+			
+			if ( isset($_COOKIE[$name]) )   // qookie exists ? 
 			{
 				$val = $_COOKIE[$name];     // get qookie-value
 
@@ -156,16 +155,16 @@ class plgSystemstopHitCounts extends JPlugin
  					$val .= $artEntry;
 					setcookie($name, $val, time()+$pov, $path='/');     			/* verfällt in x Stunden */
 				}
-				else
-				{
+				else 
+				{					
 					$msg = '[public/registrated]user - noHitcount because of reloading article[' .$article->id .'].';
 
 					$this->decrHitCounter($this->params->get('log_active'),$article->id,$article->hits);
-
+					
 					if ( $this->params->get('log_active') )
 					{
 						JLog::add($msg);
-					}
+					}          
 				}
 			}
 			else
