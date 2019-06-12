@@ -133,39 +133,44 @@ class plgSystemstopHitCounts extends JPlugin
 		/**************************************************
 		 * Check if public / registrated-user updates article
 		 **************************************************/       
-		if 	( $context  == 'com_content.article' AND 
-				( 		$user->groups[2] == 2   /* registrated */ 
-					||	$user->id 	 	 == 0	/* public      */
-				)
-			)   
+		if 	( $context  == 'com_content.article' AND
+				  ( 		$user->groups[2] == 2    /* registrated */
+				      ||	$user->groups[0] == 9    /* public   ?  */
+				      ||	$user->id 	 == 0	 /* public      */
+				   )
+			  )
 		{
-			$sep  	= ',';							// separator  
+			$sep  	= ',';							// separator
 			$name 	= 'HitCnt-Qookie';
-			$pov 	= $this->params->get('qookie_pov');	// period of validity for qookie
-			
-			if ( isset($_COOKIE[$name]) )   // qookie exists ? 
+			$pov 	  = $this->params->get('qookie_pov');	// period of validity for qookie
+			$artEntry = $article->id .$sep;
+
+			if ( isset($_COOKIE[$name]) )   // qookie exists ?
 			{
-				$val = $_COOKIE[$name];     // get qookie-value 
-				if ( strpos($val,$article->id) === false ) 
+				$val = $_COOKIE[$name];     // get qookie-value
+
+//				echo '<br >' .'4-qookieVal=' .$val;
+//				echo '<br >' .'5-artId='     .$article->id;
+				if ( strpos($val,$artEntry) === false )     // if entry exists in val
 				{
- 					$val .= $article->id .$sep;
+ 					$val .= $artEntry;
 					setcookie($name, $val, time()+$pov, $path='/');     			/* verfällt in x Stunden */
 				}
-				else 
-				{					
+				else
+				{
 					$msg = '[public/registrated]user - noHitcount because of reloading article[' .$article->id .'].';
 
 					$this->decrHitCounter($this->params->get('log_active'),$article->id,$article->hits);
-					
+
 					if ( $this->params->get('log_active') )
 					{
 						JLog::add($msg);
-					}          
+					}
 				}
 			}
 			else
 			{
-				setcookie($name, $article->id .$sep, time()+$pov, $path='/');	/* verfällt in x Stunden */
+				setcookie($name, $artEntry, time()+$pov, $path='/');	/* verfällt in x Stunden */
 			}
 
 			return;
